@@ -74,32 +74,43 @@ class _ResultPageState extends State<ResultPage> {
         title: Text("Result${plural(_signs?.length ?? 0)} for \"$joinedKeywords\""),
       ),
       body: ListView.builder(
-        itemBuilder: (context, i) {
+        itemBuilder: (BuildContext context, int idx) {
+          // Add a divider
+          if (idx.isOdd) return new Divider();
+          // Shift indices
+          int i = idx ~/ 2;
+
+          // Print the signs
           if (_signs != null) {
-            if (i < _signs.length)
+            if (i < _signs.length) {
               return ListTile(
-                leading: _signs[i].videoUrl == null
-                    ? Container(
-                        width: 90.0,
-                        height: 56.0,
-                        child: Icon(Icons.videocam_off),
-                      )
-                    : (_thumbnails[_signs[i].hashCode].value.initialized
+                leading: // If the sign has no video URL, print an icon instead
+                    _signs[i].videoUrl == null
                         ? Container(
                             width: 90.0,
                             height: 56.0,
-                            child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
+                            child: Icon(Icons.videocam_off),
                           )
-                        : CircularProgressIndicator()),
+                        : // If the thumbnail is ready, show it, otherwise show a progress bar
+                        (_thumbnails[_signs[i].hashCode].value.initialized
+                            ? Container(
+                                width: 90.0,
+                                height: 56.0,
+                                child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
+                              )
+                            : CircularProgressIndicator()),
                 title: Text(_signs[i].word),
                 subtitle: Text(_signs[i].definition),
                 trailing: _signs[i].videoUrl != null ? Icon(Icons.keyboard_arrow_right) : null,
               );
-            else
+            } else
               return null;
           } else {
             if (i == 0)
-              return ListTile(title: Text("Loading..."));
+              return ListTile(
+                leading: CircularProgressIndicator(),
+                title: Text("Loading..."),
+              );
             else
               return null;
           }
