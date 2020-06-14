@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
                 ? () {
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text])),
+                        MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text.trim()])),
                     );
                   }
                 : null,

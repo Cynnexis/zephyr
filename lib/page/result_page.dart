@@ -38,6 +38,24 @@ class _ResultPageState extends State<ResultPage> {
     }
   }
 
+  @override
+  void dispose() {
+    for (VideoPlayerController controller in _thumbnails.values) controller.dispose();
+    super.dispose();
+  }
+
+  /// Play or pause the video depending on its current state.
+  ///
+  /// If the video was paused, it will play it, and vice-versa, using [controller]. It will update the current state.
+  void triggerVideo(VideoPlayerController controller) {
+    setState(() {
+      if (controller.value.isPlaying)
+        controller.pause();
+      else
+        controller.play();
+    });
+  }
+
   //#region PROPERTIES
 
   /// Get the list of current keywords for the result screen.
@@ -83,26 +101,51 @@ class _ResultPageState extends State<ResultPage> {
           // Print the signs
           if (_signs != null) {
             if (i < _signs.length) {
-              return ListTile(
-                leading: // If the sign has no video URL, print an icon instead
-                    _signs[i].videoUrl == null
-                        ? Container(
-                            width: 90.0,
-                            height: 56.0,
-                            child: Icon(Icons.videocam_off),
-                          )
-                        : // If the thumbnail is ready, show it, otherwise show a progress bar
-                        (_thumbnails[_signs[i].hashCode].value.initialized
-                            ? Container(
-                                width: 90.0,
-                                height: 56.0,
-                                child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
-                              )
-                            : CircularProgressIndicator()),
-                title: Text(_signs[i].word),
-                subtitle: Text(_signs[i].definition),
-                trailing: _signs[i].videoUrl != null ? Icon(Icons.keyboard_arrow_right) : null,
-              );
+              if (_signs[i].videoUrl == null || !_thumbnails[_signs[i].hashCode].value.initialized) {
+                return ListTile(
+                  leading: _signs[i].videoUrl == null ? Icon(Icons.videocam_off) : CircularProgressIndicator(),
+                  title: Text(_signs[i].word),
+                  subtitle: Text(_signs[i].definition),
+                );
+              } else {
+                _thumbnails[_signs[i].hashCode].setLooping(true);
+                // the sign has a video URL and the thumbnail is initialized
+                return ExpansionTile(
+                  leading: AspectRatio(
+                    aspectRatio: _thumbnails[_signs[i].hashCode].value.aspectRatio,
+                    child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
+                  ),
+                  title: Text(_signs[i].word),
+                  subtitle: Text(_signs[i].definition),
+                  trailing: Icon(Icons.keyboard_arrow_down),
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(_signs[i].word, style: TextStyle(fontWeight: FontWeight.bold)),
+                          SizedBox(height: 16.0),
+                          GestureDetector(
+                            onTap: () => triggerVideo(_thumbnails[_signs[i].hashCode]),
+                            child: AspectRatio(
+                              aspectRatio: _thumbnails[_signs[i].hashCode].value.aspectRatio,
+                              child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(_thumbnails[_signs[i].hashCode].value.isPlaying
+                                ? Icons.pause_circle_filled
+                                : Icons.play_circle_filled),
+                            onPressed: () => triggerVideo(_thumbnails[_signs[i].hashCode]),
+                          ),
+                          Text(_signs[i].definition),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              }
             } else
               return null;
           } else {
