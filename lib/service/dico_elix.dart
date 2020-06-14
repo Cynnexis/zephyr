@@ -2,8 +2,8 @@ import 'package:html/dom.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/sign_web_scrapper.dart';
 
+/// Web scrapper for Dico Elix, a web dictionary for LSF.
 class DicoElix extends SignWebScrapper {
-
   DicoElix() : super("https://dico.elix-lsf.fr/dictionnaire/");
 
   @override
@@ -19,19 +19,22 @@ class DicoElix extends SignWebScrapper {
 
       for (Element meaning in meanings) {
         Element video = meaning.querySelector("video");
-        Element signButton = meaning.querySelector("button.video-type-button.sign-button");
-        if (!signButton.attributes.containsKey("disabled")) {
-          Element infos = meaning.querySelector("div.infos");
-          String description = infos.querySelector("h3")?.text;
-          String sourceUrl = infos.querySelector("a.source")?.attributes["src"];
-          if (description != null && sourceUrl != null) {
-            description += "\n\n" + infos
-                .querySelector("a.source")
-                ?.attributes["src"];
-          }
-
-          signs.add(Sign(title.text, video?.attributes["src"], description));
+        Element infos = meaning.querySelector("div.infos");
+        String description = infos.querySelector("h3")?.text;
+        String sourceUrl = infos.querySelector("a.source")?.attributes["src"];
+        if (description != null && sourceUrl != null) {
+          description += "\n\n" + infos.querySelector("a.source")?.attributes["src"];
         }
+
+        String videoUrl;
+        if (video != null && video.attributes.containsKey("src"))
+          videoUrl = video.attributes["src"];
+
+        signs.add(Sign(
+          title.text,
+          videoUrl,
+          definition: description,
+        ));
       }
     }
 

@@ -1,9 +1,15 @@
+import 'package:video_player/video_player.dart';
+
 class Sign {
   String word;
   String videoUrl;
   String definition;
 
-  Sign(this.word, this.videoUrl, [this.definition]);
+  Sign(this.word, this.videoUrl, {this.definition});
+
+  VideoPlayerController getVideoPlayerController() {
+    return new VideoPlayerController.network(videoUrl);
+  }
 
   @override
   String toString() {

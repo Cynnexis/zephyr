@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zephyr/page/result_page.dart';
 
 /// Page that display the search bar and a search button.
 class SearchPage extends StatefulWidget {
@@ -60,11 +61,10 @@ class _SearchPageState extends State<SearchPage> {
             tooltip: "Search",
             onPressed: _enableSearchIcon
                 ? () {
-                    final snackbar = SnackBar(
-                      content: Text("Searching for \"${_searchFieldController.text}\"..."),
-                      duration: Duration(seconds: 2),
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text])),
                     );
-                    Scaffold.of(context).showSnackBar(snackbar);
                   }
                 : null,
           ),
