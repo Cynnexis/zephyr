@@ -10,4 +10,4 @@ Zéphyr is a dictionary for LSF.
 
 ## Demo
 
-![Zéphyr demo](https://i.imgur.com/JWgqfWL.gif)
+![Zéphyr demo](https://i.imgur.com/mvmbIwa.gif)
