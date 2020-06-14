@@ -58,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           IconButton(
             icon: Icon(Icons.search),
-            tooltip: "Search",
+            tooltip: MaterialLocalizations.of(context).searchFieldLabel,
             onPressed: _enableSearchIcon
                 ? () {
                     Navigator.push(
