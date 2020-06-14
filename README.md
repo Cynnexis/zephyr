@@ -1,16 +1,13 @@
-# zephyr
+# Zéphyr
 
-Zephyr is a dictionary for LSF.
+Zéphyr is a dictionary for LSF.
 
-## Getting Started
+## Goals
 
-This project is a starting point for a Flutter application.
+* Personal project to learn how to use Flutter and Dart.
+* Many LSF dictionaries exist, but there are no tools available that use them altogether.
+* Few apps are available for mobile concerning LSF.
 
-A few resources to get you started if this is your first Flutter project:
+## Demo
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Zéphyr demo](https://i.imgur.com/JWgqfWL.gif)
