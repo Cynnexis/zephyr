@@ -27,8 +27,7 @@ class DicoElix extends SignWebScrapper {
         }
 
         String videoUrl;
-        if (video != null && video.attributes.containsKey("src"))
-          videoUrl = video.attributes["src"];
+        if (video != null && video.attributes.containsKey("src")) videoUrl = video.attributes["src"];
 
         signs.add(Sign(
           title.text,
