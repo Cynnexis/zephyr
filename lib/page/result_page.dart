@@ -3,6 +3,7 @@ import 'package:video_player/video_player.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/dico_elix.dart';
 import 'package:zephyr/utils.dart';
+import 'package:zephyr/zephyr_localization.dart';
 
 class ResultPage extends StatefulWidget {
   final List<String> keywords;
@@ -89,7 +90,7 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Result${plural(_signs?.length ?? 0)} for \"$joinedKeywords\""),
+        title: Text(_signs != null ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords) : ZephyrLocalization.of(context).loading()),
       ),
       body: ListView.builder(
         itemBuilder: (BuildContext context, int idx) {
@@ -152,7 +153,7 @@ class _ResultPageState extends State<ResultPage> {
             if (i == 0)
               return ListTile(
                 leading: CircularProgressIndicator(),
-                title: Text("Loading..."),
+                title: Text(ZephyrLocalization.of(context).loading()),
               );
             else
               return null;

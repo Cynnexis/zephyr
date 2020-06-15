@@ -1,0 +1,24 @@
+{
+  "@@locale": "en",
+  "@@last_modified": "2020-06-14T19:32:36.910284",
+  "appName": "Zéphyr",
+  "@appName": {
+    "description": "The application name.",
+    "type": "text"
+  },
+  "searchSign": "Search a sign",
+  "@searchSign": {
+    "description": "Indicates what the user must put in the search field.",
+    "type": "text"
+  },
+  "loading": "Loading{suffix}",
+  "@loading": {
+    "description": "Loading text.",
+    "type": "text"
+  },
+  "resultsFor": "{numResults,plural, =0{No results for \"{keywords}\"}=1{Result for \"{keywords}\"}other{Results for \"{keywords}\"}}",
+  "@resultsFor": {
+    "description": "Title for the results page.",
+    "type": "text"
+  }
+}

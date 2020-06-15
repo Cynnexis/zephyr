@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zephyr/page/result_page.dart';
+import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
 class SearchPage extends StatefulWidget {
@@ -50,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
               onSubmitted: null,
               decoration: InputDecoration(
                 border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.grey)),
-                labelText: "Search a sign",
+                labelText: ZephyrLocalization.of(context).searchSign(),
                 hintText: "Bonjour, au revoir, merci, ...", // TODO: Make dynamic list
               ),
               controller: _searchFieldController,
