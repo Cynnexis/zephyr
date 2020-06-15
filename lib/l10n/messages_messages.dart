@@ -20,8 +20,8 @@ class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'messages';
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "appName" : MessageLookupByLibrary.simpleMessage("Zéphyr"),
-    "searchSign" : MessageLookupByLibrary.simpleMessage("Search a sign")
-  };
+  static _notInlinedMessages(_) => <String, Function>{
+        "appName": MessageLookupByLibrary.simpleMessage("Zéphyr"),
+        "searchSign": MessageLookupByLibrary.simpleMessage("Search a sign")
+      };
 }

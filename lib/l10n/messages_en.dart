@@ -21,13 +21,14 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(suffix) => "Loading${suffix}";
 
-  static m1(numResults, keywords) => "${Intl.plural(numResults, zero: 'No results for \"${keywords}\"', one: 'Result for \"${keywords}\"', other: 'Results for \"${keywords}\"')}";
+  static m1(numResults, keywords) =>
+      "${Intl.plural(numResults, zero: 'No results for \"${keywords}\"', one: 'Result for \"${keywords}\"', other: 'Results for \"${keywords}\"')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
-  static _notInlinedMessages(_) => <String, Function> {
-    "appName" : MessageLookupByLibrary.simpleMessage("Zéphyr"),
-    "loading" : m0,
-    "resultsFor" : m1,
-    "searchSign" : MessageLookupByLibrary.simpleMessage("Search a sign")
-  };
+  static _notInlinedMessages(_) => <String, Function>{
+        "appName": MessageLookupByLibrary.simpleMessage("Zéphyr"),
+        "loading": m0,
+        "resultsFor": m1,
+        "searchSign": MessageLookupByLibrary.simpleMessage("Search a sign")
+      };
 }

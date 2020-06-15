@@ -25,7 +25,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   /// Update the search button state according to the search field text emptiness.
-  /// 
+  ///
   /// If the search text field is empty, the search button is disabled, otherwise it is enable. The text is known
   /// through [_searchFieldController]. This function is designed to be used as a callback by
   /// [TextEditingController].
@@ -63,8 +63,8 @@ class _SearchPageState extends State<SearchPage> {
             onPressed: _enableSearchIcon
                 ? () {
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text.trim()])),
+                      context,
+                      MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text.trim()])),
                     );
                   }
                 : null,

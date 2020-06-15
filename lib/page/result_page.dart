@@ -90,7 +90,9 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_signs != null ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords) : ZephyrLocalization.of(context).loading()),
+        title: Text(_signs != null
+            ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords)
+            : ZephyrLocalization.of(context).loading()),
       ),
       body: ListView.builder(
         itemBuilder: (BuildContext context, int idx) {
