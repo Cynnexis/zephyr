@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zephyr/l10n/messages_all.dart';
 
+List<Locale> supportedLocales = [
+  const Locale("en", ''),
+  const Locale("fr", ''),
+  const Locale("es", ''),
+];
+
 class ZephyrLocalization {
   final String localeName;
 
@@ -72,7 +78,7 @@ class ZephyrLocalizationDelegate extends LocalizationsDelegate<ZephyrLocalizatio
   const ZephyrLocalizationDelegate();
 
   @override
-  bool isSupported(Locale locale) => ["en", "fr"].contains(locale.languageCode);
+  bool isSupported(Locale locale) => [for (Locale l in supportedLocales) l.languageCode].contains(locale.languageCode);
 
   @override
   Future<ZephyrLocalization> load(Locale locale) => ZephyrLocalization.load(locale);

@@ -21,10 +21,7 @@ class MyApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        const Locale("en", ''),
-        const Locale("fr", ''),
-      ],
+      supportedLocales: supportedLocales,
     );
   }
 }
@@ -45,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(MaterialLocalizations.of(context).nextMonthTooltip);
     return Scaffold(
       appBar: AppBar(
         title: Text(ZephyrLocalization.of(context).appName()),

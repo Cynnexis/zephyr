@@ -1,22 +1,22 @@
 {
-  "@@locale": "fr",
+  "@@locale": "es",
   "@@last_modified": "2020-06-15T16:37:22.758421",
   "appName": "Zéphyr",
   "@appName": {
     "description": "The application name.",
     "type": "text"
   },
-  "searchSign": "Rechercher un signe",
+  "searchSign": "Busca una señal",
   "@searchSign": {
     "description": "Indicates what the user must put in the search field.",
     "type": "text"
   },
-  "loading": "Chargement{suffix}",
+  "loading": "Cargando{suffix}",
   "@loading": {
     "description": "Loading text.",
     "type": "text"
   },
-  "resultsFor": "{numResults,plural, =0{Aucun résultats pour \"{keywords}\"}=1{Résultat pour \"{keywords}\"}other{Résultats pour \"{keywords}\"}}",
+  "resultsFor": "{numResults,plural, =0{No hay resultados para \"{keywords}\"}=1{Resultado para \"{keywords}\"}other{Resultados para \"{keywords}\"}}",
   "@resultsFor": {
     "description": "Title for the results page.",
     "type": "text"
