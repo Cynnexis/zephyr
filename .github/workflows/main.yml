@@ -1,0 +1,26 @@
+name: Zéphyr CI/CD
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+      - 'cicd/**'
+  push:
+    branches:
+      - master
+      - develop
+      - 'cicd/**'
+
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    name: Check that the source code is correctly formatted.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run dartfmt
+        id: yapf
+        uses: docker://google/dart:2.8.4
+        with:
+          args: dartfmt -n --set-exit-if-changed -l 120 .
