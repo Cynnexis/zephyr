@@ -56,7 +56,7 @@ develop mobile app using Flutter SDK and the Dart language.
 This project is under the GNU General Public License. Please see the [LICENSE.txt][license] file
 for more detail (it's a really fascinating story written in there!)
 
-[zéphyr-demo]: https://i.imgur.com/JWgqfWL.gif
+[zéphyr-demo]: https://i.imgur.com/mvmbIwa.gif
 [flutter-install]: https://flutter.dev/docs/get-started/install
 [zephyr-zip]: https://github.com/Cynnexis/zephyr/archive/master.zip
 [flutter]: https://flutter.dev/
