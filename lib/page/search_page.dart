@@ -35,6 +35,16 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  /// Send the [text] to the result page as keywords.
+  void _search([String text]) {
+    if (text == null) text = _searchFieldController.text.trim();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ResultPage([text])),
+    );
+  }
+
   /// Build the search page.
   ///
   /// Build the search page, and use [context] to get the parent scaffold if possible.
@@ -48,26 +58,20 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: TextField(
               autocorrect: true,
-              onSubmitted: null,
+              onSubmitted: _enableSearchIcon ? _search : null,
               decoration: InputDecoration(
                 border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.grey)),
                 labelText: ZephyrLocalization.of(context).searchSign(),
                 hintText: "Bonjour, au revoir, merci, ...", // TODO: Make dynamic list
               ),
+              textInputAction: TextInputAction.search,
               controller: _searchFieldController,
             ),
           ),
           IconButton(
             icon: Icon(Icons.search),
             tooltip: MaterialLocalizations.of(context).searchFieldLabel,
-            onPressed: _enableSearchIcon
-                ? () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ResultPage([_searchFieldController.text.trim()])),
-                    );
-                  }
-                : null,
+            onPressed: _enableSearchIcon ? _search : null,
           ),
         ],
       ),

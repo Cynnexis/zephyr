@@ -5,6 +5,8 @@ import 'package:zephyr/service/dico_elix.dart';
 import 'package:zephyr/utils.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
+import '../zephyr_theme.dart';
+
 class ResultPage extends StatefulWidget {
   final List<String> keywords;
 
@@ -89,10 +91,17 @@ class _ResultPageState extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: Text(_signs != null
-            ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords)
-            : ZephyrLocalization.of(context).loading()),
+        iconTheme: ZephyrTheme.getIconThemeData(context),
+        title: Text(
+          _signs != null
+              ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords)
+              : ZephyrLocalization.of(context).loading(),
+          style: TextStyle(color: ZephyrTheme.getFontColor(context)),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
       ),
       body: ListView.builder(
         itemBuilder: (BuildContext context, int idx) {
