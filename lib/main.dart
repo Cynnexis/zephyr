@@ -6,15 +6,13 @@ import 'package:zephyr/zephyr_localization.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     String appName = "Zéphyr";
     return MaterialApp(
       title: appName,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: getTheme(),
+      darkTheme: getTheme(Brightness.dark),
       home: MyHomePage(title: appName),
       localizationsDelegates: [
         const ZephyrLocalizationDelegate(),
@@ -22,6 +20,15 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: supportedLocales,
+    );
+  }
+
+  ThemeData getTheme([Brightness brightness = Brightness.light]) {
+    return ThemeData(
+      primarySwatch: Colors.blue,
+      primaryColor: Color(0xff83d5d8),
+      accentColor: Color(0xff83d5d8),
+      brightness: brightness,
     );
   }
 }

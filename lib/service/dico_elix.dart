@@ -40,8 +40,3 @@ class DicoElix extends SignWebScrapper {
     return signs;
   }
 }
-
-Future<void> main() async {
-  DicoElix dicoElix = DicoElix();
-  print((await dicoElix.getSigns(["minute"])).join("\n"));
-}
