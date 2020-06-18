@@ -5,45 +5,36 @@ import 'package:zephyr/service/dico_elix.dart';
 import 'package:zephyr/utils.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
-import '../zephyr_theme.dart';
-
 class ResultPage extends StatefulWidget {
-  final List<String> keywords;
+  final String keywords;
 
-  ResultPage(this.keywords, {DicoElix dicoElix, List<Sign> signs}) : super();
+  ResultPage(this.keywords) : super();
 
   @override
-  State createState() => new _ResultPageState(this.keywords);
+  State createState() => new _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage> {
-  List<String> _keywords;
   DicoElix _dicoElix;
-  List<Sign> _signs;
-  Map<int, VideoPlayerController> _thumbnails = new Map();
+  Set<VideoPlayerController> controllers = {};
 
   /// Result page state constructor.
   ///
-  /// [_keywords] is the list of keywords (it can be one or multiple items separated by whitespaces), and they will be
-  /// used then by  [dicoElix] to fetch the [signs] if not provided by the users. The [_keywords] can be accessed
-  /// through [keywords] through a getter and a setter, and when new values are given, the [_signs] are refreshed, so
-  /// is the list.
-  _ResultPageState(List<String> keywords, {DicoElix dicoElix, List<Sign> signs}) : super() {
-    if (dicoElix == null) dicoElix = DicoElix();
-
-    _dicoElix = dicoElix;
-
-    if (signs == null)
-      this.keywords = keywords;
-    else {
-      _keywords = keywords;
-      _signs = signs;
-    }
+  /// [keywords] is the list of keywords (it can be one or multiple items separated by whitespaces), and they will be
+  /// used then by  [dicoElix] to fetch the [signs] if not provided by the users.
+  _ResultPageState() : super() {
+    _dicoElix = DicoElix();
   }
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.keywords == null) throw "keywords cannot be null.";
+  }
+
   void dispose() {
-    for (VideoPlayerController controller in _thumbnails.values) controller.dispose();
+    for (VideoPlayerController controller in controllers) controller.dispose();
+    controllers.clear();
     super.dispose();
   }
 
@@ -51,126 +42,115 @@ class _ResultPageState extends State<ResultPage> {
   ///
   /// If the video was paused, it will play it, and vice-versa, using [controller]. It will update the current state.
   void triggerVideo(VideoPlayerController controller) {
-    setState(() {
-      if (controller.value.isPlaying)
-        controller.pause();
-      else
-        controller.play();
-    });
+    if (controller.value.isPlaying)
+      controller.pause();
+    else
+      controller.play();
   }
-
-  //#region PROPERTIES
-
-  /// Get the list of current keywords for the result screen.
-  List<String> get keywords => _keywords;
-
-  /// Set the new keywords for the result search.
-  ///
-  /// It will fetch the new values and display them in the result page.
-  set keywords(List<String> values) {
-    if (values == null) throw "keywords cannot be null.";
-    _keywords = values;
-    _dicoElix.getSigns(_keywords).then((value) {
-      setState(() {
-        print("Fetched ${value.length} sign${plural(value.length)}");
-        _signs = value;
-        for (Sign sign in _signs) {
-          int hash = sign.hashCode;
-          _thumbnails[hash] = sign.getVideoPlayerController();
-          _thumbnails[hash].initialize().then((value) => setState(() {}));
-        }
-      });
-    });
-  }
-
-  /// Join the keywords list with whitespaces.
-  String get joinedKeywords => _keywords?.join(' ') ?? '';
-
-  //#endregion
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        iconTheme: ZephyrTheme.getIconThemeData(context),
-        title: Text(
-          _signs != null
-              ? ZephyrLocalization.of(context).resultsFor(_signs.length, joinedKeywords)
-              : ZephyrLocalization.of(context).loading(),
-          style: TextStyle(color: ZephyrTheme.getFontColor(context)),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
-      body: ListView.builder(
-        itemBuilder: (BuildContext context, int idx) {
-          // Add a divider
-          if (idx.isOdd) return new Divider();
-          // Shift indices
-          int i = idx ~/ 2;
+  FutureBuilder build(BuildContext context) {
+    // Wait for the signs
+    return FutureBuilder(
+      future: _dicoElix.getSigns([widget.keywords]),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          List<Sign> signs = snapshot.data;
 
-          // Print the signs
-          if (_signs != null) {
-            if (i < _signs.length) {
-              if (_signs[i].videoUrl == null || !_thumbnails[_signs[i].hashCode].value.initialized) {
-                return ListTile(
-                  leading: _signs[i].videoUrl == null ? Icon(Icons.videocam_off) : CircularProgressIndicator(),
-                  title: Text(_signs[i].word),
-                  subtitle: Text(_signs[i].definition),
-                );
-              } else {
-                _thumbnails[_signs[i].hashCode].setLooping(true);
-                // the sign has a video URL and the thumbnail is initialized
-                return ExpansionTile(
-                  leading: AspectRatio(
-                    aspectRatio: _thumbnails[_signs[i].hashCode].value.aspectRatio,
-                    child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
-                  ),
-                  title: Text(_signs[i].word),
-                  subtitle: Text(_signs[i].definition),
-                  trailing: Icon(Icons.keyboard_arrow_down),
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(_signs[i].word, style: TextStyle(fontWeight: FontWeight.bold)),
-                          SizedBox(height: 16.0),
-                          GestureDetector(
-                            onTap: () => triggerVideo(_thumbnails[_signs[i].hashCode]),
-                            child: AspectRatio(
-                              aspectRatio: _thumbnails[_signs[i].hashCode].value.aspectRatio,
-                              child: VideoPlayer(_thumbnails[_signs[i].hashCode]),
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(_thumbnails[_signs[i].hashCode].value.isPlaying
-                                ? Icons.pause_circle_filled
-                                : Icons.play_circle_filled),
-                            onPressed: () => triggerVideo(_thumbnails[_signs[i].hashCode]),
-                          ),
-                          Text(_signs[i].definition),
-                        ],
-                      ),
-                    ),
-                  ],
-                );
-              }
-            } else
-              return null;
-          } else {
-            if (i == 0)
-              return ListTile(
-                leading: CircularProgressIndicator(),
-                title: Text(ZephyrLocalization.of(context).loading()),
-              );
-            else
-              return null;
+          // If no results were returned
+          if (signs.isEmpty) {
+            return Center(
+              child: Text(
+                "No results",
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            );
           }
-        },
-      ),
+
+          return ListView.builder(
+            itemBuilder: (BuildContext context, int idx) {
+              // Add a divider
+              if (idx.isOdd) return new Divider();
+              // Shift indices
+              int i = idx ~/ 2;
+
+              // Print the signs
+              if (i < signs.length) {
+                if (signs[i].videoUrl == null) {
+                  return ListTile(
+                    leading: Icon(Icons.videocam_off),
+                    title: Text(signs[i].word),
+                    subtitle: Text(signs[i].definition),
+                  );
+                } else {
+                  signs[i].getVideoPlayerController().setLooping(true);
+                  // Wait for the video (thumbnail and controller)
+                  return FutureBuilder(
+                    future: signs[i].getVideoPlayerControllerInitialized(),
+                    builder: (context, snapshot) {
+                      VideoPlayerController controller = snapshot.data;
+                      controllers.add(controller);
+
+                      // If the video is fetched, display the thumbnail and put the video in the expanded part
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return ExpansionTile(
+                          leading: AspectRatio(
+                            aspectRatio: controller.value.aspectRatio,
+                            child: VideoPlayer(controller),
+                          ),
+                          title: Text(signs[i].word),
+                          subtitle: Text(signs[i].definition),
+                          trailing: Icon(Icons.keyboard_arrow_down),
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(signs[i].word, style: TextStyle(fontWeight: FontWeight.bold)),
+                                  SizedBox(height: 16.0),
+                                  GestureDetector(
+                                    onTap: () => triggerVideo(controller),
+                                    child: AspectRatio(
+                                      aspectRatio: controller.value.aspectRatio,
+                                      child: VideoPlayer(controller),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(
+                                      controller.value.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
+                                    ),
+                                    onPressed: () => triggerVideo(controller),
+                                  ),
+                                  Text(signs[i].definition),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        // If the thumbnail and the video are still loading, display a simple tile with a progress bar
+                        return ListTile(
+                          leading: CircularProgressIndicator(),
+                          title: Text(signs[i].word),
+                          subtitle: Text(signs[i].definition),
+                        );
+                      }
+                    },
+                  );
+                }
+              } else
+                // If the end of the list has been reached
+                return null;
+            },
+          );
+        } else {
+          return ListTile(
+            leading: CircularProgressIndicator(),
+            title: Text(ZephyrLocalization.of(context).loading()),
+          );
+        }
+      },
     );
   }
 }

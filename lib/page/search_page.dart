@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
 class SearchPage extends StatefulWidget {
+  final Function(String keywords) onSearch;
+
+  SearchPage({this.onSearch}) : super();
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -11,6 +14,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final _searchFieldController = TextEditingController();
   var _enableSearchIcon = true;
+
+  _SearchPageState() : super();
 
   @override
   void initState() {
@@ -39,10 +44,10 @@ class _SearchPageState extends State<SearchPage> {
   void _search([String text]) {
     if (text == null) text = _searchFieldController.text.trim();
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ResultPage([text])),
-    );
+    // Close the keyboard
+    FocusManager.instance.primaryFocus.unfocus();
+
+    widget.onSearch(text);
   }
 
   /// Build the search page.
@@ -50,30 +55,36 @@ class _SearchPageState extends State<SearchPage> {
   /// Build the search page, and use [context] to get the parent scaffold if possible.
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              autocorrect: true,
-              onSubmitted: _enableSearchIcon ? _search : null,
-              decoration: InputDecoration(
-                border: new OutlineInputBorder(borderSide: new BorderSide(color: Colors.grey)),
-                labelText: ZephyrLocalization.of(context).searchSign(),
-                hintText: "Bonjour, au revoir, merci, ...", // TODO: Make dynamic list
+    return Card(
+      margin: EdgeInsets.all(16.0),
+      elevation: 5.0,
+      shape: RoundedRectangleBorder(
+        side: BorderSide(color: Colors.transparent, width: 0),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(12.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: TextField(
+                autocorrect: true,
+                onSubmitted: _enableSearchIcon ? _search : null,
+                decoration: InputDecoration(
+                    labelText: ZephyrLocalization.of(context).appName(),
+                    hintText: ZephyrLocalization.of(context).searchSign()),
+                textInputAction: TextInputAction.search,
+                controller: _searchFieldController,
               ),
-              textInputAction: TextInputAction.search,
-              controller: _searchFieldController,
             ),
-          ),
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: MaterialLocalizations.of(context).searchFieldLabel,
-            onPressed: _enableSearchIcon ? _search : null,
-          ),
-        ],
+            IconButton(
+              icon: Icon(Icons.search),
+              tooltip: MaterialLocalizations.of(context).searchFieldLabel,
+              onPressed: _enableSearchIcon ? _search : null,
+            ),
+          ],
+        ),
       ),
     );
   }
