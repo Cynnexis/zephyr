@@ -21,7 +21,7 @@ class ZephyrTheme {
     if (brightness == null) brightness = getSystemBrightness(context);
 
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: brightness == Brightness.light ? Colors.transparent : primaryColor,
+      statusBarColor: Colors.transparent,
       statusBarIconBrightness: ~brightness,
       systemNavigationBarColor: primaryColor,
     ));
