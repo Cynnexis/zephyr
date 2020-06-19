@@ -11,6 +11,12 @@ class Sign {
     return new VideoPlayerController.network(videoUrl);
   }
 
+  Future<VideoPlayerController> getVideoPlayerControllerInitialized() async {
+    VideoPlayerController controller = getVideoPlayerController();
+    await controller.initialize();
+    return Future.value(controller);
+  }
+
   @override
   String toString() {
     return 'Sign{word: $word, videoUrl: $videoUrl, definition: $definition}';

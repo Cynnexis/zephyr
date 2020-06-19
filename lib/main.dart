@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
 import 'package:zephyr/zephyr_localization.dart';
+import 'package:zephyr/zephyr_theme.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,8 +13,8 @@ class MyApp extends StatelessWidget {
     String appName = "Zéphyr";
     return MaterialApp(
       title: appName,
-      theme: getTheme(),
-      darkTheme: getTheme(Brightness.dark),
+      theme: ZephyrTheme.light,
+      darkTheme: ZephyrTheme.dark,
       home: MyHomePage(title: appName),
       localizationsDelegates: [
         const ZephyrLocalizationDelegate(),
@@ -20,15 +22,6 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: supportedLocales,
-    );
-  }
-
-  ThemeData getTheme([Brightness brightness = Brightness.light]) {
-    return ThemeData(
-      primarySwatch: Colors.blue,
-      primaryColor: Color(0xff83d5d8),
-      accentColor: Color(0xff83d5d8),
-      brightness: brightness,
     );
   }
 }
@@ -42,28 +35,67 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState(title);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   final String title;
+  String keywords = null;
 
   _MyHomePageState(this.title) : super();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    didChangePlatformBrightness();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    setState(() {
+      ZephyrTheme.setSystemUIOverlayStyle(brightness: WidgetsBinding.instance.window.platformBrightness);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(ZephyrLocalization.of(context).appName()),
-      ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: Padding(
+        padding: EdgeInsets.only(top: 22.0),
+        child: Center(
+          child: Stack(
+            fit: StackFit.loose,
             children: <Widget>[
-              Text(
-                title,
-                style: Theme.of(context).textTheme.headline4,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: keywords != null
+                    ? <Widget>[
+                        Expanded(child: ResultPage(keywords)),
+                      ]
+                    : <Widget>[
+                        Center(
+                          child: Image(
+                            image: AssetImage("assets/images/zephyr.png"),
+                            width: 100,
+                            height: 100,
+                          ),
+                        ),
+                        SizedBox(height: 32.0),
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ],
               ),
-              SearchPage()
+              SearchPage(
+                  onSearch: (keywords) => setState(() {
+                        print("New keywords: $keywords");
+                        this.keywords = keywords;
+                      })),
             ],
           ),
         ),
