@@ -69,10 +69,12 @@ class _ResultPageState extends State<ResultPage> {
 
           return ListView.builder(
             itemBuilder: (BuildContext context, int idx) {
+              if (0 <= idx && idx <= 1) return new Container(height: 35);
+
               // Add a divider
               if (idx.isOdd) return new Divider();
               // Shift indices
-              int i = idx ~/ 2;
+              int i = (idx ~/ 2) - 1;
 
               // Print the signs
               if (i < signs.length) {
@@ -83,16 +85,16 @@ class _ResultPageState extends State<ResultPage> {
                     subtitle: Text(signs[i].definition),
                   );
                 } else {
-                  signs[i].getVideoPlayerController().setLooping(true);
                   // Wait for the video (thumbnail and controller)
                   return FutureBuilder(
                     future: signs[i].getVideoPlayerControllerInitialized(),
                     builder: (context, snapshot) {
                       VideoPlayerController controller = snapshot.data;
-                      controllers.add(controller);
 
                       // If the video is fetched, display the thumbnail and put the video in the expanded part
                       if (snapshot.connectionState == ConnectionState.done) {
+                        controllers.add(controller);
+                        controller.setLooping(true);
                         return ExpansionTile(
                           leading: AspectRatio(
                             aspectRatio: controller.value.aspectRatio,
@@ -116,12 +118,7 @@ class _ResultPageState extends State<ResultPage> {
                                       child: VideoPlayer(controller),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: Icon(
-                                      controller.value.isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
-                                    ),
-                                    onPressed: () => triggerVideo(controller),
-                                  ),
+                                  SizedBox(height: 16.0),
                                   Text(signs[i].definition),
                                 ],
                               ),
@@ -145,10 +142,15 @@ class _ResultPageState extends State<ResultPage> {
             },
           );
         } else {
-          return ListTile(
-            leading: CircularProgressIndicator(),
-            title: Text(ZephyrLocalization.of(context).loading()),
-          );
+          return Center(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircularProgressIndicator(),
+              SizedBox(height: 32),
+              Text(ZephyrLocalization.of(context).loading()),
+            ],
+          ));
         }
       },
     );

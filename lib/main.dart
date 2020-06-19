@@ -74,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: keywords != null
                     ? <Widget>[
-                        SizedBox(height: 100.0),
                         Expanded(child: ResultPage(keywords)),
                       ]
                     : <Widget>[

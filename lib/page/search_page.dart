@@ -13,14 +13,14 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _searchFieldController = TextEditingController();
-  var _enableSearchIcon = true;
+  var _enableSearch = false;
 
   _SearchPageState() : super();
 
   @override
   void initState() {
     super.initState();
-    _searchFieldController.addListener(this._updateSearchButton);
+    _searchFieldController.addListener(this._updateSearch);
   }
 
   @override
@@ -34,9 +34,9 @@ class _SearchPageState extends State<SearchPage> {
   /// If the search text field is empty, the search button is disabled, otherwise it is enable. The text is known
   /// through [_searchFieldController]. This function is designed to be used as a callback by
   /// [TextEditingController].
-  void _updateSearchButton() {
+  void _updateSearch() {
     setState(() {
-      _enableSearchIcon = _searchFieldController.text.trim() != "";
+      _enableSearch = _searchFieldController.text.trim() != "";
     });
   }
 
@@ -63,27 +63,27 @@ class _SearchPageState extends State<SearchPage> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: TextField(
-                autocorrect: true,
-                onSubmitted: _enableSearchIcon ? _search : null,
-                decoration: InputDecoration(
-                    labelText: ZephyrLocalization.of(context).appName(),
-                    hintText: ZephyrLocalization.of(context).searchSign()),
-                textInputAction: TextInputAction.search,
-                controller: _searchFieldController,
-              ),
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              tooltip: MaterialLocalizations.of(context).searchFieldLabel,
-              onPressed: _enableSearchIcon ? _search : null,
-            ),
-          ],
+        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+        child: TextField(
+          autocorrect: true,
+          onSubmitted: _enableSearch ? _search : null,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            labelText: ZephyrLocalization.of(context).appName(),
+            hintText: ZephyrLocalization.of(context).searchSign(),
+            prefixIcon: Icon(Icons.search),
+            suffixIcon: _enableSearch
+                ? IconButton(
+                    onPressed: () {
+                      _searchFieldController.clear();
+                      FocusScope.of(context).requestFocus(new FocusNode());
+                    },
+                    icon: Icon(Icons.clear),
+                  )
+                : null,
+          ),
+          textInputAction: TextInputAction.search,
+          controller: _searchFieldController,
         ),
       ),
     );
