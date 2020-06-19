@@ -30,8 +30,6 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 0.1.2
 
-  flutter_launcher_icons: 0.7.5
-
   html: 0.14.0+3
   http: 0.12.1
   video_player: 0.10.11+1
@@ -40,6 +38,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_launcher_icons: 0.7.5
 
 
 # For information on the generic Dart part of this file, see the
@@ -87,3 +87,5 @@ flutter_icons:
   android: true
   image_path_ios: "assets/images/zephyr.png"
   image_path_android: "assets/images/zephyr.png"
+  adaptive_icon_foreground: "assets/images/zephyr_foreground.png"
+  adaptive_icon_background: "#83D5D8"
