@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Sign Web Scrapper" type="FlutterTestConfigType" factoryName="Flutter Test" nameIsGenerated="true">
+    <option name="testName" value="Sign Web Scrapper" />
+    <option name="testFile" value="$PROJECT_DIR$/test/sign_web_scrapper_test.dart" />
+    <method v="2" />
+  </configuration>
+</component>
