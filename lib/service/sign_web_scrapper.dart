@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:http/http.dart';
-import 'package:html/parser.dart';
 import 'package:html/dom.dart';
+import 'package:html/parser.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:zephyr/model/sign.dart';
 
