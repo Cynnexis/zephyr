@@ -72,15 +72,19 @@ class _SearchPageState extends State<SearchPage> {
             border: InputBorder.none,
             labelText: ZephyrLocalization.of(context).appName(),
             hintText: ZephyrLocalization.of(context).searchSign(),
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: IconButton(
+              key: Key("search_button"),
+              icon: Icon(Icons.search),
+              onPressed: _enableSearch ? _search : null,
+            ),
             suffixIcon: _enableSearch
                 ? IconButton(
                     key: Key("clear_search_button"),
+                    icon: Icon(Icons.clear),
                     onPressed: () {
                       _searchFieldController.clear();
                       FocusScope.of(context).requestFocus(new FocusNode());
                     },
-                    icon: Icon(Icons.clear),
                   )
                 : null,
           ),

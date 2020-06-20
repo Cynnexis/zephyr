@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/dico_elix.dart';
 

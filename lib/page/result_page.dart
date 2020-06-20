@@ -87,6 +87,7 @@ class _ResultPageState extends State<ResultPage> {
                 } else {
                   // Wait for the video (thumbnail and controller)
                   return FutureBuilder(
+                    key: Key("future_result_$i"),
                     future: signs[i].getVideoPlayerControllerInitialized(),
                     builder: (context, snapshot) {
                       VideoPlayerController controller = snapshot.data;
@@ -96,6 +97,7 @@ class _ResultPageState extends State<ResultPage> {
                         controllers.add(controller);
                         controller.setLooping(true);
                         return ExpansionTile(
+                          key: Key("sign_result_$i"),
                           leading: AspectRatio(
                             aspectRatio: controller.value.aspectRatio,
                             child: VideoPlayer(controller),
@@ -143,14 +145,15 @@ class _ResultPageState extends State<ResultPage> {
           );
         } else {
           return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              CircularProgressIndicator(),
-              SizedBox(height: 32),
-              Text(ZephyrLocalization.of(context).loading()),
-            ],
-          ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(key: Key("loading_signs_results")),
+                SizedBox(height: 32),
+                Text(ZephyrLocalization.of(context).loading()),
+              ],
+            ),
+          );
         }
       },
     );

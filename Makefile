@@ -13,3 +13,6 @@ lint:
 
 fix-lint:
 	dartfmt -w -l 120 .
+
+test-integration:
+	flutter drive --target=test_driver/search.dart
