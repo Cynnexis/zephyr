@@ -5,7 +5,7 @@ import 'package:zephyr/zephyr_localization.dart';
 class SearchPage extends StatefulWidget {
   final Function(String keywords) onSearch;
 
-  SearchPage({this.onSearch}) : super();
+  SearchPage({Key key, this.onSearch}) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -65,20 +65,26 @@ class _SearchPageState extends State<SearchPage> {
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
         child: TextField(
+          key: ValueKey("search_signs"),
           autocorrect: true,
           onSubmitted: _enableSearch ? _search : null,
           decoration: InputDecoration(
             border: InputBorder.none,
             labelText: ZephyrLocalization.of(context).appName(),
             hintText: ZephyrLocalization.of(context).searchSign(),
-            prefixIcon: Icon(Icons.search),
+            prefixIcon: IconButton(
+              key: Key("search_button"),
+              icon: Icon(Icons.search),
+              onPressed: _enableSearch ? _search : null,
+            ),
             suffixIcon: _enableSearch
                 ? IconButton(
+                    key: Key("clear_search_button"),
+                    icon: Icon(Icons.clear),
                     onPressed: () {
                       _searchFieldController.clear();
                       FocusScope.of(context).requestFocus(new FocusNode());
                     },
-                    icon: Icon(Icons.clear),
                   )
                 : null,
           ),

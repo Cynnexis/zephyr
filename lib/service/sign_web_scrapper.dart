@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:http/http.dart';
-import 'package:html/parser.dart';
 import 'package:html/dom.dart';
+import 'package:html/parser.dart';
+import 'package:http/http.dart';
 import 'package:meta/meta.dart';
 import 'package:zephyr/model/sign.dart';
 
@@ -23,7 +23,7 @@ abstract class SignWebScrapper {
   Future<Document> getHtmlParser(String url, {Map<String, String> headers}) async {
     Client client = Client();
     Response response = await client.get(url, headers: headers);
-    if (response.statusCode < 200 && response.statusCode >= 300)
+    if (response.statusCode < 200 || response.statusCode >= 300)
       throw HttpException("Could not connect to \"$url\". Status code: ${response.statusCode}");
 
     Document doc = parse(response.body);

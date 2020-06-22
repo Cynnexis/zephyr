@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/dico_elix.dart';
-import 'package:zephyr/utils.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class ResultPage extends StatefulWidget {
   final String keywords;
 
-  ResultPage(this.keywords) : super();
+  ResultPage({Key key, @required this.keywords}) : super(key: key);
 
   @override
   State createState() => new _ResultPageState();
@@ -58,7 +57,7 @@ class _ResultPageState extends State<ResultPage> {
           List<Sign> signs = snapshot.data;
 
           // If no results were returned
-          if (signs.isEmpty) {
+          if (signs == null || signs.isEmpty) {
             return Center(
               child: Text(
                 "No results",
@@ -68,6 +67,7 @@ class _ResultPageState extends State<ResultPage> {
           }
 
           return ListView.builder(
+            key: Key("results_list"),
             itemBuilder: (BuildContext context, int idx) {
               if (0 <= idx && idx <= 1) return new Container(height: 35);
 
@@ -87,6 +87,7 @@ class _ResultPageState extends State<ResultPage> {
                 } else {
                   // Wait for the video (thumbnail and controller)
                   return FutureBuilder(
+                    key: Key("future_result_$i"),
                     future: signs[i].getVideoPlayerControllerInitialized(),
                     builder: (context, snapshot) {
                       VideoPlayerController controller = snapshot.data;
@@ -96,6 +97,7 @@ class _ResultPageState extends State<ResultPage> {
                         controllers.add(controller);
                         controller.setLooping(true);
                         return ExpansionTile(
+                          key: Key("sign_result_$i"),
                           leading: AspectRatio(
                             aspectRatio: controller.value.aspectRatio,
                             child: VideoPlayer(controller),
@@ -143,14 +145,15 @@ class _ResultPageState extends State<ResultPage> {
           );
         } else {
           return Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              CircularProgressIndicator(),
-              SizedBox(height: 32),
-              Text(ZephyrLocalization.of(context).loading()),
-            ],
-          ));
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                CircularProgressIndicator(key: Key("loading_signs_results")),
+                SizedBox(height: 32),
+                Text(ZephyrLocalization.of(context).loading()),
+              ],
+            ),
+          );
         }
       },
     );

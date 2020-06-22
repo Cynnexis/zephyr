@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  test:
+    container_name: zephyr-test
+    image: cynnexis/zephyr
+    volumes:
+      - "./lib:/build/lib"
+      - "./coverage:/build/coverage"
+      - "./android:/build/android"
+      - "./ios:/build/ios"
+      - "./assets:/build/assets"
+      - "./test:/build/test"
+      - "./test_driver:/build/test_driver"
+    ports:
+      - 33153:33153
+      - 50729:50729
+    command: test
+
+  lint:
+    container_name: zephyr-lint
+    image: cynnexis/zephyr
+    volumes:
+      - "./lib:/build/lib"
+      - "./test:/build/test"
+      - "./test_driver:/build/test_driver"
+    command: lint

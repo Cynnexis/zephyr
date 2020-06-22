@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Dico Elix Tests" type="FlutterTestConfigType" factoryName="Flutter Test">
+    <option name="testFile" value="$PROJECT_DIR$/test/dico_elix_test.dart" />
+    <method v="2" />
+  </configuration>
+</component>
