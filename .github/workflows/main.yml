@@ -1,16 +1,6 @@
 name: Zéphyr CI/CD
 
-on:
-  pull_request:
-    branches:
-      - master
-      - develop
-      - 'cicd/**'
-  push:
-    branches:
-      - master
-      - develop
-      - 'cicd/**'
+on: [push]
 
 jobs:
   lint:
