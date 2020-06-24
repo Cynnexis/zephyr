@@ -41,6 +41,7 @@ class ZephyrHome extends StatefulWidget {
 }
 
 class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
+  MainActivityState currentActivityState = MainActivityState.SEARCH;
   String keywords = null;
 
   @override
@@ -63,9 +64,78 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
   }
 
+  List<Widget> getActivity([MainActivityState activity]) {
+    if (activity == null) activity = this.currentActivityState;
+
+    switch (activity) {
+      case MainActivityState.SEARCH:
+        if (keywords != null) {
+          return <Widget>[Expanded(child: ResultPage(keywords: keywords))];
+        } else {
+          return <Widget>[
+            Center(
+              child: Image(
+                image: AssetImage("assets/images/zephyr.png"),
+                width: 100,
+                height: 100,
+              ),
+            ),
+            SizedBox(height: 32.0),
+            Text(
+              widget.title,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ];
+        }
+        break;
+      case MainActivityState.FAVORITE:
+        return <Widget>[
+          Center(
+            child: Icon(Icons.favorite, size: 100),
+          ),
+          SizedBox(height: 32.0),
+          Text(
+            activity.name,
+            style: Theme.of(context).textTheme.headline4,
+          ),
+        ];
+      default:
+        return <Widget>[];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<ListTile> drawerItems = List(MainActivityState.values.length);
+
+    // Build the list of items in the drawer
+    MainActivityState.values.asMap().forEach((i, activity) {
+      drawerItems[i] = ListTile(
+          leading: activity.icon,
+          title: Text(activity.name),
+          onTap: () {
+            // Close drawer
+            Navigator.pop(context);
+            // Change the activity state if different (avoid refreshing tree)
+            if (currentActivityState != activity) setState(() => currentActivityState = activity);
+          });
+    });
+
+    // Build the widget tree
     return Scaffold(
+      drawer: Drawer(
+        key: Key("drawer"),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                  child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                ),
+              ] +
+              drawerItems,
+        ),
+      ),
       body: Padding(
         padding: EdgeInsets.only(top: 22.0),
         child: Center(
@@ -74,22 +144,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
             children: <Widget>[
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: keywords != null
-                    ? <Widget>[Expanded(child: ResultPage(keywords: keywords))]
-                    : <Widget>[
-                        Center(
-                          child: Image(
-                            image: AssetImage("assets/images/zephyr.png"),
-                            width: 100,
-                            height: 100,
-                          ),
-                        ),
-                        SizedBox(height: 32.0),
-                        Text(
-                          widget.title,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                      ],
+                children: getActivity(),
               ),
               SearchPage(
                 onSearch: (keywords) => setState(() {
@@ -102,5 +157,31 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+}
+
+enum MainActivityState { SEARCH, FAVORITE }
+
+extension _MainActivityStateExtension on MainActivityState {
+  String get name {
+    switch (this) {
+      case MainActivityState.SEARCH:
+        return "Search Signs";
+      case MainActivityState.FAVORITE:
+        return "Favorite";
+      default:
+        return "";
+    }
+  }
+
+  Icon get icon {
+    switch (this) {
+      case MainActivityState.SEARCH:
+        return Icon(Icons.search);
+      case MainActivityState.FAVORITE:
+        return Icon(Icons.favorite);
+      default:
+        return Icon(Icons.error);
+    }
   }
 }

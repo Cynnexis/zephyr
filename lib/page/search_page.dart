@@ -64,32 +64,46 @@ class _SearchPageState extends State<SearchPage> {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
-        child: TextField(
-          key: ValueKey("search_signs"),
-          autocorrect: true,
-          onSubmitted: _enableSearch ? _search : null,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: ZephyrLocalization.of(context).appName(),
-            hintText: ZephyrLocalization.of(context).searchSign(),
-            prefixIcon: IconButton(
-              key: Key("search_button"),
-              icon: Icon(Icons.search),
-              onPressed: _enableSearch ? _search : null,
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              key: Key("drawer_button"),
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                FocusManager.instance.primaryFocus.unfocus();
+                Scaffold.of(context).openDrawer();
+              },
             ),
-            suffixIcon: _enableSearch
-                ? IconButton(
-                    key: Key("clear_search_button"),
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _searchFieldController.clear();
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    },
-                  )
-                : null,
-          ),
-          textInputAction: TextInputAction.search,
-          controller: _searchFieldController,
+            Expanded(
+              child: TextField(
+                key: ValueKey("search_signs"),
+                autocorrect: true,
+                onSubmitted: _enableSearch ? _search : null,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: ZephyrLocalization.of(context).appName(),
+                  hintText: ZephyrLocalization.of(context).searchSign(),
+                  prefixIcon: IconButton(
+                    key: Key("search_button"),
+                    icon: Icon(Icons.search),
+                    onPressed: _enableSearch ? _search : null,
+                  ),
+                  suffixIcon: _enableSearch
+                      ? IconButton(
+                          key: Key("clear_search_button"),
+                          icon: Icon(Icons.clear),
+                          onPressed: () {
+                            _searchFieldController.clear();
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                          },
+                        )
+                      : null,
+                ),
+                textInputAction: TextInputAction.search,
+                controller: _searchFieldController,
+              ),
+            ),
+          ],
         ),
       ),
     );
