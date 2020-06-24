@@ -24,7 +24,7 @@ elif [[ $1 == *"fix"* && $1 == *"lint"* ]]; then
 	dartfmt -w -l 120 .
 	exit_code=$?
 elif [[ $1 == "test" ]]; then
-	flutter test --no-color --coverage test/*_test.dart
+	flutter -v test --no-color --coverage test/*_test.dart
 	exit_code=$?
 else
 	echo "\"$1\" is not a valid command."
