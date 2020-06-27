@@ -10,7 +10,6 @@ services:
       - "./ios:/build/ios"
       - "./assets:/build/assets"
       - "./test:/build/test"
-      - "./test_driver:/build/test_driver"
     ports:
       - 33153:33153
       - 50729:50729
