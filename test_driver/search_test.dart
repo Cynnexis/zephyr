@@ -45,5 +45,7 @@ void main() {
       expect(find.text("3. petit récipient en terre réfractaire utilisé pour les calcinations en laboratoire."),
           isNotNull);
     });
+
+    // TODO: Test favorite
   });
 }

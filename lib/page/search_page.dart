@@ -15,8 +15,6 @@ class _SearchPageState extends State<SearchPage> {
   final _searchFieldController = TextEditingController();
   var _enableSearch = false;
 
-  _SearchPageState() : super();
-
   @override
   void initState() {
     super.initState();

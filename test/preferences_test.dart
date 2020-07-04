@@ -46,8 +46,8 @@ void main() {
 
     test("Saving & Loading", () async {
       await saveFavorites(signs);
-      final Set<Sign> loadedSigns = await loadFavorites();
-      expect(signs, equals(loadedSigns));
+      final Favorites loadedSigns = await loadFavorites();
+      expect(signs, equals(loadedSigns.values));
     });
 
     test("Append Favorites", () async {

@@ -18,7 +18,7 @@ class Keywords extends ChangeNotifier {
 
     if (newKeywords is String)
       _value = newKeywords;
-    else if (newKeywords is List || newKeywords is Set)
+    else if (newKeywords is Iterable)
       _value = newKeywords.map((e) => e?.toString() ?? "null").join(' ');
     else
       throw "Couldn't decipher the type of \"$newKeywords\" (type: ${newKeywords.runtimeType}).";

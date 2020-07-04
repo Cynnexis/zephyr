@@ -4,11 +4,13 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
+import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 import 'package:zephyr/zephyr_theme.dart';
 
 import 'model/keywords.dart';
 
+// TODO: Translate app
 void main() => runApp(ZephyrApp());
 
 class ZephyrApp extends StatelessWidget {
@@ -125,40 +127,63 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
 
     // Build the widget tree
-    return ChangeNotifierProvider(
-      create: (context) => Keywords(),
-      child: Scaffold(
-        drawer: Drawer(
-          key: Key("drawer"),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-                  DrawerHeader(
-                    decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
-                    child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
-                  ),
-                ] +
-                drawerItems,
-          ),
-        ),
-        body: Padding(
-          padding: EdgeInsets.only(top: 22.0),
-          child: Center(
-            child: Stack(
-              fit: StackFit.loose,
-              children: <Widget>[
-                Consumer<Keywords>(
-                  builder: (context, keywords, child) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: getActivity(keywords),
+    return FutureBuilder<Favorites>(
+      future: loadFavorites(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
+          return MultiProvider(
+            providers: <ChangeNotifierProvider>[
+              ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
+              ChangeNotifierProvider<Favorites>(create: (context) => snapshot.data),
+            ],
+            child: Scaffold(
+              drawer: Drawer(
+                key: Key("drawer"),
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: <Widget>[
+                        DrawerHeader(
+                          decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                          child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                        ),
+                      ] +
+                      drawerItems,
+                ),
+              ),
+              body: Padding(
+                padding: EdgeInsets.only(top: 22.0),
+                child: Center(
+                  child: Stack(
+                    fit: StackFit.loose,
+                    children: <Widget>[
+                      Consumer<Favorites>(
+                        builder: (context, favorites, child) {
+                          return Consumer<Keywords>(
+                            builder: (context, keywords, child) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: getActivity(keywords),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                      SearchPage(),
+                    ],
                   ),
                 ),
-                SearchPage(),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
+          );
+        } else
+          return Center(
+            child: Image(
+              image: AssetImage("assets/images/zephyr.png"),
+              width: 100,
+              height: 100,
+            ),
+          );
+      },
     );
   }
 }

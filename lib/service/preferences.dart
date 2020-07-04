@@ -1,8 +1,50 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zephyr/model/sign.dart';
+import 'package:zephyr/page/favorite_page.dart';
+
+class Favorites extends ChangeNotifier {
+  Set<Sign> _values = Set();
+
+  List<Sign> get values => List.unmodifiable(_values);
+
+  int get length => _values.length;
+
+  void set values(dynamic signs) {
+    if (signs == null) throw "signs cannot be null.";
+
+    if (signs is Set<Sign>)
+      _values = signs;
+    else if (signs is Iterable<Sign>) _values = Set<Sign>.of(signs);
+    notifyListeners();
+  }
+
+  void add(Sign sign) {
+    if (sign == null) throw "sign cannot be null";
+    _values.add(sign);
+    notifyListeners();
+  }
+
+  void addAll(Iterable<Sign> signs) {
+    for (Sign sign in signs) add(sign);
+  }
+
+  void clear() {
+    _values.clear();
+    notifyListeners();
+  }
+
+  bool contains(Sign sign) => _values.contains(sign);
+
+  bool remove(Sign sign) {
+    bool result = _values.remove(sign);
+    notifyListeners();
+    return result;
+  }
+}
 
 /// Get the path to the file containing all the favorite signs.
 Future<String> _getFavoriteFilePath() async {
@@ -21,13 +63,22 @@ Future<File> _getFavoriteFile() async {
 /// [signs] will be saved to an external file. If [append] is `true`, the file won't be overwritten, but the content
 /// will simply be appended. If there are incomplete signs in [signs] (such as no `word` field), they won't be saved.
 /// Note that duplicated elements are not permitted.
-Future<File> saveFavorites(Set<Sign> signs, {bool append = false}) async {
+Future<File> saveFavorites(dynamic signs, {bool append = false}) async {
+  if (!(signs is Set<Sign>)) {
+    if (signs is Iterable<Sign>)
+      signs = Set.of(signs);
+    else if (signs is Favorites)
+      signs = Set.of(signs.values);
+    else
+      throw ArgumentError.value(signs, "signs");
+  }
+
   Set<Sign> allSigns = Set();
 
   // If in "append" mode, add the favorites already in the file
   if (append) {
-    final Set<Sign> loadedSigns = await loadFavorites();
-    allSigns.addAll(loadedSigns);
+    final Favorites loadedSigns = await loadFavorites();
+    allSigns.addAll(loadedSigns.values);
   }
 
   // Add the given signs (after adding the loaded values if `append` is true)
@@ -47,14 +98,14 @@ Future<File> saveFavorites(Set<Sign> signs, {bool append = false}) async {
 /// Load the favorites signs from an external file.
 ///
 /// Note that duplicated signs are not permitted.
-Future<Set<Sign>> loadFavorites() async {
-  final Set<Sign> signs = Set();
+Future<Favorites> loadFavorites() async {
+  final Favorites favorites = Favorites();
 
   final File file = await _getFavoriteFile();
-  if (!file.existsSync()) return signs;
+  if (!file.existsSync()) return favorites;
   final String json = await file.readAsString();
   final List<dynamic> decodedJson = jsonDecode(json);
-  for (dynamic entry in decodedJson) signs.add(Sign.fromJson(entry));
+  for (dynamic entry in decodedJson) favorites.add(Sign.fromJson(entry));
 
-  return signs;
+  return favorites;
 }
