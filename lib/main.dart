@@ -1,9 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
 import 'package:zephyr/zephyr_localization.dart';
 import 'package:zephyr/zephyr_theme.dart';
+
+import 'model/keywords.dart';
 
 void main() => runApp(ZephyrApp());
 
@@ -42,7 +46,6 @@ class ZephyrHome extends StatefulWidget {
 
 class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
   MainActivityState currentActivityState = MainActivityState.SEARCH;
-  String keywords = null;
 
   @override
   void initState() {
@@ -64,12 +67,12 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
   }
 
-  List<Widget> getActivity([MainActivityState activity]) {
+  List<Widget> getActivity(Keywords keywords, {MainActivityState activity}) {
     if (activity == null) activity = this.currentActivityState;
 
     switch (activity) {
       case MainActivityState.SEARCH:
-        if (keywords != null) {
+        if (keywords != null && !keywords.isEmpty) {
           return <Widget>[Expanded(child: ResultPage(keywords: keywords))];
         } else {
           return <Widget>[
@@ -122,37 +125,37 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
 
     // Build the widget tree
-    return Scaffold(
-      drawer: Drawer(
-        key: Key("drawer"),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-                DrawerHeader(
-                  decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
-                  child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
-                ),
-              ] +
-              drawerItems,
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.only(top: 22.0),
-        child: Center(
-          child: Stack(
-            fit: StackFit.loose,
+    return ChangeNotifierProvider(
+      create: (context) => Keywords(),
+      child: Scaffold(
+        drawer: Drawer(
+          key: Key("drawer"),
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: getActivity(),
-              ),
-              SearchPage(
-                onSearch: (keywords) => setState(() {
-                  print("New keywords: $keywords");
-                  this.keywords = keywords;
-                }),
-              ),
-            ],
+                  DrawerHeader(
+                    decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                    child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                  ),
+                ] +
+                drawerItems,
+          ),
+        ),
+        body: Padding(
+          padding: EdgeInsets.only(top: 22.0),
+          child: Center(
+            child: Stack(
+              fit: StackFit.loose,
+              children: <Widget>[
+                Consumer<Keywords>(
+                  builder: (context, keywords, child) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: getActivity(keywords),
+                  ),
+                ),
+                SearchPage(),
+              ],
+            ),
           ),
         ),
       ),

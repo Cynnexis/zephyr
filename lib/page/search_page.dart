@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
 class SearchPage extends StatefulWidget {
-  final Function(String keywords) onSearch;
-
-  SearchPage({Key key, this.onSearch}) : super(key: key);
+  SearchPage({Key key}) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -41,13 +41,16 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   /// Send the [text] to the result page as keywords.
-  void _search([String text]) {
+  void _search(BuildContext context, [String text]) {
     if (text == null) text = _searchFieldController.text.trim();
+    if (text == null) text = '';
 
     // Close the keyboard
     FocusManager.instance.primaryFocus.unfocus();
 
-    widget.onSearch(text);
+    // Send the new keywords to the result list only if the new text is different
+    Keywords keywords = Provider.of<Keywords>(context, listen: false);
+    if (keywords.value != text) Provider.of<Keywords>(context, listen: false).value = text;
   }
 
   /// Build the search page.
@@ -78,7 +81,7 @@ class _SearchPageState extends State<SearchPage> {
               child: TextField(
                 key: ValueKey("search_signs"),
                 autocorrect: true,
-                onSubmitted: _enableSearch ? _search : null,
+                onSubmitted: _enableSearch ? (String text) => _search(context, text) : null,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   labelText: ZephyrLocalization.of(context).appName(),
@@ -86,7 +89,7 @@ class _SearchPageState extends State<SearchPage> {
                   prefixIcon: IconButton(
                     key: Key("search_button"),
                     icon: Icon(Icons.search),
-                    onPressed: _enableSearch ? _search : null,
+                    onPressed: _enableSearch ? () => _search(context) : null,
                   ),
                   suffixIcon: _enableSearch
                       ? IconButton(

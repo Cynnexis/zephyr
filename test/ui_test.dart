@@ -37,8 +37,6 @@ void main() {
     // Send the query
     await tester.tap(searchFinder);
     expect(tester.testTextInput.isVisible, true);
-    await tester.testTextInput.receiveAction(TextInputAction.search);
-    await tester.pumpAndSettle(d100ms);
 
     // Clear the field
     expect((tester.widget(searchFinder) as TextField).controller.text, "test");
@@ -52,7 +50,5 @@ void main() {
     await tester.tap(searchFinder);
     await tester.enterText(searchFinder, "minute");
     await tester.pumpAndSettle(d100ms);
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pumpAndSettle(d500ms);
   });
 }

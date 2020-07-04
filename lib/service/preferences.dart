@@ -51,6 +51,7 @@ Future<Set<Sign>> loadFavorites() async {
   final Set<Sign> signs = Set();
 
   final File file = await _getFavoriteFile();
+  if (!file.existsSync()) return signs;
   final String json = await file.readAsString();
   final List<dynamic> decodedJson = jsonDecode(json);
   for (dynamic entry in decodedJson) signs.add(Sign.fromJson(entry));

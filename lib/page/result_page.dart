@@ -1,21 +1,28 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/dico_elix.dart';
+import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class ResultPage extends StatefulWidget {
-  final String keywords;
+  final Keywords keywords;
 
-  ResultPage({Key key, @required this.keywords}) : super(key: key);
+  ResultPage({Key key, this.keywords}) : super(key: key);
 
   @override
   State createState() => new _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage> {
-  DicoElix _dicoElix;
-  Set<VideoPlayerController> controllers = {};
+  DicoElix _dicoElix = null;
+  Future<List<Sign>> futureSigns = null;
+  List<Future<VideoPlayerController>> futureControllers = null;
+  Set<VideoPlayerController> controllers = Set();
+  Set<Sign> favorites = Set();
 
   /// Result page state constructor.
   ///
@@ -28,12 +35,19 @@ class _ResultPageState extends State<ResultPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.keywords == null) throw "keywords cannot be null.";
+    loadFavorites().then((value) => setState(() => favorites = value)).catchError((error) {
+      if (kDebugMode) {
+        print("error: " + (error?.toString() ?? "null"));
+        final SnackBar snack = SnackBar(content: Text("An error occurred when loading the favorites."));
+        Scaffold.of(context).showSnackBar(snack);
+      }
+    });
   }
 
   void dispose() {
     for (VideoPlayerController controller in controllers) controller.dispose();
     controllers.clear();
+    favorites.clear();
     super.dispose();
   }
 
@@ -48,10 +62,18 @@ class _ResultPageState extends State<ResultPage> {
   }
 
   @override
-  FutureBuilder build(BuildContext context) {
+  Widget build(BuildContext context) {
     // Wait for the signs
+    if (widget.keywords == null) throw "keywords cannot be null.";
+
+    futureSigns = _dicoElix.getSigns(widget.keywords);
+    futureSigns.then((value) {
+      futureControllers = List(value.length);
+      for (int i = 0; i < value.length; i++) futureControllers[i] = value[i].getVideoPlayerControllerInitialized();
+    });
+
     return FutureBuilder(
-      future: _dicoElix.getSigns([widget.keywords]),
+      future: futureSigns,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           List<Sign> signs = snapshot.data;
@@ -88,7 +110,7 @@ class _ResultPageState extends State<ResultPage> {
                   // Wait for the video (thumbnail and controller)
                   return FutureBuilder(
                     key: Key("future_result_$i"),
-                    future: signs[i].getVideoPlayerControllerInitialized(),
+                    future: futureControllers[i],
                     builder: (context, snapshot) {
                       VideoPlayerController controller = snapshot.data;
 
@@ -102,7 +124,20 @@ class _ResultPageState extends State<ResultPage> {
                             aspectRatio: controller.value.aspectRatio,
                             child: VideoPlayer(controller),
                           ),
-                          title: Text(signs[i].word),
+                          title: favorites.contains(signs[i])
+                              ? Row(
+                                  children: <Widget>[
+                                    Text(signs[i].word),
+                                    SizedBox(
+                                      width: 8.0,
+                                    ),
+                                    Icon(
+                                      Icons.favorite,
+                                      size: 16.0,
+                                    ),
+                                  ],
+                                )
+                              : Text(signs[i].word),
                           subtitle: Text(signs[i].definition),
                           trailing: Icon(Icons.keyboard_arrow_down),
                           children: <Widget>[
@@ -111,7 +146,27 @@ class _ResultPageState extends State<ResultPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(signs[i].word, style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text(
+                                        signs[i].word,
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                                      ),
+                                      IconButton(
+                                        icon:
+                                            Icon(favorites.contains(signs[i]) ? Icons.favorite : Icons.favorite_border),
+                                        onPressed: () {
+                                          // Trigger favorites
+                                          if (favorites.contains(signs[i]))
+                                            setState(() => favorites.remove(signs[i]));
+                                          else
+                                            setState(() => favorites.add(signs[i]));
+                                          saveFavorites(favorites, append: false);
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                   SizedBox(height: 16.0),
                                   GestureDetector(
                                     onTap: () => triggerVideo(controller),
