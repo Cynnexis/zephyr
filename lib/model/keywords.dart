@@ -14,7 +14,7 @@ class Keywords extends ChangeNotifier {
   bool get isEmpty => _value.trim().length == 0;
 
   void set value(dynamic newKeywords) {
-    if (newKeywords == null) throw "The keywords cannot be null";
+    if (newKeywords == null) throw ArgumentError.notNull("keywords");
 
     if (newKeywords is String)
       _value = newKeywords;

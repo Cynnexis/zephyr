@@ -69,7 +69,7 @@ void main() {
 
       await saveFavorites(newSigns, append: true);
 
-      final loadedSigns = await loadFavorites();
+      final Set<Sign> loadedSigns = Set<Sign>.of((await loadFavorites()).values);
       expect(allSigns, equals(loadedSigns));
     });
 
@@ -95,7 +95,7 @@ void main() {
 
       await saveFavorites(newSigns, append: true);
 
-      final loadedSigns = await loadFavorites();
+      final Set<Sign> loadedSigns = Set<Sign>.of((await loadFavorites()).values);
       expect(allSigns, equals(loadedSigns));
     });
   });

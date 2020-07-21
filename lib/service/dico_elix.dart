@@ -10,6 +10,9 @@ class DicoElix extends SignWebScrapper {
   @override
   Future<List<Sign>> getSigns(Keywords keywords) async {
     List<Sign> signs = [];
+
+    if (keywords.isEmpty) return signs;
+
     Document doc = await this.getHtmlParser(this.getUrl(keywords));
     List<Element> words = doc.querySelectorAll("section.word");
     for (Element word in words) {

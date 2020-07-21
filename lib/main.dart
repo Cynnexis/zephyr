@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/page/favorite_page.dart';
 import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
 import 'package:zephyr/service/preferences.dart';
@@ -69,43 +71,35 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
   }
 
-  List<Widget> getActivity(Keywords keywords, {MainActivityState activity}) {
+  Widget getActivity({MainActivityState activity}) {
     if (activity == null) activity = this.currentActivityState;
 
     switch (activity) {
       case MainActivityState.SEARCH:
-        if (keywords != null && !keywords.isEmpty) {
-          return <Widget>[Expanded(child: ResultPage(keywords: keywords))];
-        } else {
-          return <Widget>[
-            Center(
-              child: Image(
-                image: AssetImage("assets/images/zephyr.png"),
-                width: 100,
-                height: 100,
+        return ResultPage(
+          defaultPageBuilder: (context) => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Image(
+                  image: AssetImage("assets/images/zephyr.png"),
+                  width: 100,
+                  height: 100,
+                ),
               ),
-            ),
-            SizedBox(height: 32.0),
-            Text(
-              widget.title,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ];
-        }
+              SizedBox(height: 32.0),
+              Text(
+                widget.title,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ],
+          ),
+        );
         break;
       case MainActivityState.FAVORITE:
-        return <Widget>[
-          Center(
-            child: Icon(Icons.favorite, size: 100),
-          ),
-          SizedBox(height: 32.0),
-          Text(
-            activity.name,
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        ];
+        return FavoritePage();
       default:
-        return <Widget>[];
+        return Container();
     }
   }
 
@@ -156,14 +150,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                   child: Stack(
                     fit: StackFit.loose,
                     children: <Widget>[
-                      Consumer<Keywords>(
-                        builder: (context, keywords, child) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: getActivity(keywords),
-                          );
-                        },
-                      ),
+                      getActivity(),
                       SearchPage(),
                     ],
                   ),
@@ -171,7 +158,8 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
               ),
             ),
           );
-        } else
+        } else {
+          // If the favorites are not loaded yet, show a loading screen
           return Scaffold(
             body: Center(
               child: Column(
@@ -204,6 +192,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
               ),
             ),
           );
+        }
       },
     );
   }

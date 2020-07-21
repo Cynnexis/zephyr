@@ -77,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Expanded(
               child: TextField(
-                key: ValueKey("search_signs"),
+                key: Key("search_signs"),
                 autocorrect: true,
                 onSubmitted: _enableSearch ? (String text) => _search(context, text) : null,
                 decoration: InputDecoration(
