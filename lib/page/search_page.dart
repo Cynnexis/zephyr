@@ -48,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
 
     // Send the new keywords to the result list only if the new text is different
     Keywords keywords = Provider.of<Keywords>(context, listen: false);
-    if (keywords.value != text) Provider.of<Keywords>(context, listen: false).value = text;
+    if (keywords.value != text) keywords.value = text;
   }
 
   /// Build the search page.
@@ -84,11 +84,13 @@ class _SearchPageState extends State<SearchPage> {
                   border: InputBorder.none,
                   labelText: ZephyrLocalization.of(context).appName(),
                   hintText: ZephyrLocalization.of(context).searchSign(),
-                  prefixIcon: IconButton(
-                    key: Key("search_button"),
-                    icon: Icon(Icons.search),
-                    onPressed: _enableSearch ? () => _search(context) : null,
-                  ),
+                  prefixIcon: FocusScope.of(context).hasFocus
+                      ? IconButton(
+                          key: Key("search_button"),
+                          icon: Icon(Icons.search),
+                          onPressed: _enableSearch ? () => _search(context) : null,
+                        )
+                      : null,
                   suffixIcon: _enableSearch
                       ? IconButton(
                           key: Key("clear_search_button"),

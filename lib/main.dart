@@ -156,15 +156,11 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                   child: Stack(
                     fit: StackFit.loose,
                     children: <Widget>[
-                      Consumer<Favorites>(
-                        builder: (context, favorites, child) {
-                          return Consumer<Keywords>(
-                            builder: (context, keywords, child) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: getActivity(keywords),
-                              );
-                            },
+                      Consumer<Keywords>(
+                        builder: (context, keywords, child) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: getActivity(keywords),
                           );
                         },
                       ),
@@ -176,11 +172,36 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
             ),
           );
         } else
-          return Center(
-            child: Image(
-              image: AssetImage("assets/images/zephyr.png"),
-              width: 100,
-              height: 100,
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image(
+                    image: AssetImage("assets/images/zephyr.png"),
+                    width: 100,
+                    height: 100,
+                  ),
+                  SizedBox(height: 16),
+                  Text(widget.title, style: TextStyle(color: Color.fromARGB(100, 255, 255, 255), fontSize: 30)),
+                  SizedBox(height: 16),
+                  // Display a circular progress indicator after 2 seconds
+                  SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: FutureBuilder(
+                      future: Future.delayed(Duration(seconds: 2)),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done)
+                          return CircularProgressIndicator();
+                        else
+                          return Container();
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
       },

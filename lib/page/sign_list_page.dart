@@ -90,7 +90,7 @@ class _SignListPageState extends State<SignListPage> {
                   children: <Widget>[
                     Text(widget.signs[i].word),
                     Consumer<Favorites>(
-                      builder: (context, favorites, child) {
+                      builder: (context, favorites, _) {
                         if (favorites.contains(widget.signs[i])) {
                           return Padding(
                             padding: const EdgeInsets.only(left: 8.0),
@@ -135,22 +135,21 @@ class _SignListPageState extends State<SignListPage> {
                                   widget.signs[i].word,
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
                                 ),
-                                Consumer<Favorites>(
-                                  builder: (context, favorites, child) {
-                                    return IconButton(
-                                      icon: Icon(
-                                          favorites.contains(widget.signs[i]) ? Icons.favorite : Icons.favorite_border),
-                                      onPressed: () {
-                                        // Trigger favorites
-                                        if (favorites.contains(widget.signs[i]))
-                                          favorites.remove(widget.signs[i]);
-                                        else
-                                          favorites.add(widget.signs[i]);
+                                IconButton(
+                                  icon: Consumer<Favorites>(
+                                    builder: (context, favorites, _) => Icon(
+                                        favorites.contains(widget.signs[i]) ? Icons.favorite : Icons.favorite_border),
+                                  ),
+                                  onPressed: () {
+                                    Favorites favorites = Provider.of<Favorites>(context, listen: false);
+                                    // Trigger favorites
+                                    if (favorites.contains(widget.signs[i]))
+                                      favorites.remove(widget.signs[i]);
+                                    else
+                                      favorites.add(widget.signs[i]);
 
-                                        // Save favorites
-                                        saveFavorites(favorites);
-                                      },
-                                    );
+                                    // Save favorites
+                                    saveFavorites(favorites);
                                   },
                                 ),
                               ],
