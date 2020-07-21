@@ -15,6 +15,8 @@ class Favorites extends ChangeNotifier {
 
   int get length => _values.length;
 
+  bool get isEmpty => length == 0;
+
   List<Sign> get values => List.unmodifiable(_values);
 
   void set values(dynamic signs) {
@@ -120,9 +122,9 @@ Future<File> _getFavoriteFile() async {
 Future<File> saveFavorites(dynamic signs, {bool append = false}) async {
   if (!(signs is Set<Sign>)) {
     if (signs is Iterable<Sign>)
-      signs = Set.of(signs);
+      signs = Set<Sign>.of(signs);
     else if (signs is Favorites)
-      signs = Set.of(signs.values);
+      signs = Set<Sign>.of(signs.values);
     else
       throw ArgumentError.value(signs, "signs");
   }

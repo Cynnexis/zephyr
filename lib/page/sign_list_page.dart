@@ -135,22 +135,21 @@ class _SignListPageState extends State<SignListPage> {
                                   widget.signs[i].word,
                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
                                 ),
-                                IconButton(
-                                  icon: Consumer<Favorites>(
-                                    builder: (context, favorites, _) => Icon(
+                                Consumer<Favorites>(
+                                  builder: (context, favorites, _) => IconButton(
+                                    icon: Icon(
                                         favorites.contains(widget.signs[i]) ? Icons.favorite : Icons.favorite_border),
-                                  ),
-                                  onPressed: () {
-                                    Favorites favorites = Provider.of<Favorites>(context, listen: false);
-                                    // Trigger favorites
-                                    if (favorites.contains(widget.signs[i]))
-                                      favorites.remove(widget.signs[i]);
-                                    else
-                                      favorites.add(widget.signs[i]);
+                                    onPressed: () {
+                                      // Trigger favorites
+                                      if (favorites.contains(widget.signs[i]))
+                                        favorites.remove(widget.signs[i]);
+                                      else
+                                        favorites.add(widget.signs[i]);
 
-                                    // Save favorites
-                                    saveFavorites(favorites);
-                                  },
+                                      // Save favorites
+                                      saveFavorites(favorites);
+                                    },
+                                  ),
                                 ),
                               ],
                             ),
