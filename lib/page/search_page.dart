@@ -18,6 +18,15 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+
+    // Add _searchFieldController as a listener to the app's keywords
+    final Keywords keywords = Provider.of<Keywords>(context, listen: false);
+    keywords.addListener(() {
+      // Change only if the fields are different to avoid unnecessary callback executions.
+      if (_searchFieldController.text != keywords.value) _searchFieldController.text = keywords.value;
+    });
+
+    // Add _updateSearch() function as a listener for controller changes
     _searchFieldController.addListener(this._updateSearch);
   }
 
@@ -33,9 +42,8 @@ class _SearchPageState extends State<SearchPage> {
   /// through [_searchFieldController]. This function is designed to be used as a callback by
   /// [TextEditingController].
   void _updateSearch() {
-    setState(() {
-      _enableSearch = _searchFieldController.text.trim() != "";
-    });
+    bool enableSearch = _searchFieldController.text.trim() != "";
+    if (_enableSearch != enableSearch) setState(() => _enableSearch = enableSearch);
   }
 
   /// Send the [text] to the result page as keywords.

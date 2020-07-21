@@ -71,8 +71,11 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     });
   }
 
-  Widget getActivity({MainActivityState activity}) {
+  Widget getActivity({@required BuildContext context, MainActivityState activity}) {
     if (activity == null) activity = this.currentActivityState;
+
+    // Clear the keywords from the search bar
+    Provider.of<Keywords>(context, listen: false).clear();
 
     switch (activity) {
       case MainActivityState.SEARCH:
@@ -130,7 +133,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
               ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
               ChangeNotifierProvider<Favorites>(create: (context) => snapshot.data),
             ],
-            child: Scaffold(
+            builder: (context, _) => Scaffold(
               drawer: Drawer(
                 key: Key("drawer"),
                 child: ListView(
@@ -150,7 +153,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                   child: Stack(
                     fit: StackFit.loose,
                     children: <Widget>[
-                      getActivity(),
+                      getActivity(context: context),
                       SearchPage(),
                     ],
                   ),

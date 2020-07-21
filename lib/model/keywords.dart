@@ -16,6 +16,7 @@ class Keywords extends ChangeNotifier {
   void set value(dynamic newKeywords) {
     if (newKeywords == null) throw ArgumentError.notNull("keywords");
 
+    int oldHash = _value.hashCode;
     if (newKeywords is String)
       _value = newKeywords;
     else if (newKeywords is Iterable)
@@ -23,12 +24,15 @@ class Keywords extends ChangeNotifier {
     else
       throw "Couldn't decipher the type of \"$newKeywords\" (type: ${newKeywords.runtimeType}).";
 
-    notifyListeners();
+    // Notify listeners only if value changed
+    if (oldHash != _value.hashCode) notifyListeners();
   }
 
   Keywords([dynamic keywords = '']) {
     this.value = keywords;
   }
+
+  void clear() => value = '';
 
   @override
   bool operator ==(Object other) =>
