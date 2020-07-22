@@ -87,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
               child: TextField(
                 key: Key("search_signs"),
                 autocorrect: true,
-                onSubmitted: _enableSearch ? (String text) => _search(context, text) : null,
+                onSubmitted: (String text) => _search(context, text),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   labelText: ZephyrLocalization.of(context).appName(),
@@ -96,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
                       ? IconButton(
                           key: Key("search_button"),
                           icon: Icon(Icons.search),
-                          onPressed: _enableSearch ? () => _search(context) : null,
+                          onPressed: () => _search(context),
                         )
                       : null,
                   suffixIcon: _enableSearch
@@ -105,6 +105,7 @@ class _SearchPageState extends State<SearchPage> {
                           icon: Icon(Icons.clear),
                           onPressed: () {
                             _searchFieldController.clear();
+                            _search(context, '');
                             FocusScope.of(context).requestFocus(new FocusNode());
                           },
                         )

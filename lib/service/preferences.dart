@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:zephyr/model/sign.dart';
-import 'package:zephyr/page/favorite_page.dart';
 
 /// List of favorites signs. It is also a [ChangeNotifier] that notifies all its listeners every time the list is
 /// modified.

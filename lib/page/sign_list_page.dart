@@ -17,7 +17,7 @@ class SignListPage extends StatefulWidget {
 }
 
 class _SignListPageState extends State<SignListPage> {
-  List<Future<VideoPlayerController>> futureControllers = null;
+  Map<Sign, Future<VideoPlayerController>> futureControllers = Map();
   Set<VideoPlayerController> controllers = Set();
 
   void dispose() {
@@ -56,9 +56,9 @@ class _SignListPageState extends State<SignListPage> {
     }
 
     // Initialize the list that will contains the future video player controllers, for all given signs
-    futureControllers = List(widget.signs.length);
-    for (int i = 0; i < widget.signs.length; i++)
-      futureControllers[i] = widget.signs[i].getVideoPlayerControllerInitialized();
+    for (Sign sign in widget.signs)
+      if (!futureControllers.containsKey(sign) || futureControllers[sign] == null)
+        futureControllers[sign] = sign.getVideoPlayerControllerInitialized();
 
     return ListView.builder(
       key: Key("signs_list"),
@@ -82,7 +82,7 @@ class _SignListPageState extends State<SignListPage> {
             // Wait for the video (thumbnail and controller)
             return FutureBuilder(
               key: Key("future_result_$i"),
-              future: futureControllers[i],
+              future: futureControllers[widget.signs[i]],
               builder: (context, snapshot) {
                 VideoPlayerController controller = snapshot.data;
 
