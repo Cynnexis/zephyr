@@ -1,4 +1,5 @@
 import 'package:test/test.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/dico_elix.dart';
 
@@ -9,7 +10,7 @@ void main() {
     setUp(() => dicoElix = DicoElix());
 
     test("Get \"test\"", () async {
-      List<Sign> testSigns = await dicoElix.getSigns(["test"]);
+      List<Sign> testSigns = await dicoElix.getSigns(Keywords("test"));
 
       expect(testSigns, hasLength(3));
       for (Sign testSign in testSigns) {
@@ -19,7 +20,7 @@ void main() {
     });
 
     test("Get \"minute\"", () async {
-      List<Sign> minuteSigns = await dicoElix.getSigns(["minute"]);
+      List<Sign> minuteSigns = await dicoElix.getSigns(Keywords("minute"));
 
       expect(minuteSigns, hasLength(8));
       for (int i = 0; i < 6; i++) expect(minuteSigns[i].word, equals("minute (n.f.)"));
@@ -36,7 +37,7 @@ void main() {
     });
 
     test("Get \"ZZZ\"", () async {
-      List<Sign> zzzSigns = await dicoElix.getSigns(["ZZZ"]);
+      List<Sign> zzzSigns = await dicoElix.getSigns(Keywords("ZZZ"));
       expect(zzzSigns, isEmpty);
     });
   });

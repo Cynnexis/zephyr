@@ -20,5 +20,59 @@
   "@resultsFor": {
     "description": "Title for the results page.",
     "type": "text"
+  },
+  "noSigns": "No signs",
+  "@noSigns": {
+    "description": "When no signs was given in the list of signs to show.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchSigns": "Search Signs",
+  "@searchSigns": {
+    "description": "Name fo the first page, where the user can search for signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Name fo the second page, where the user can see their favorite signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "openDrawer": "Open drawer",
+  "@openDrawer": {
+    "description": "Name fo the button to open the drawer.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchButton": "Search button",
+  "@searchButton": {
+    "description": "Name fo the button to search for signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clearTextField": "Clear text field",
+  "@clearTextField": {
+    "description": "Name fo the button to clear the text field.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addToFavorites": "Add to favorites",
+  "@addToFavorites": {
+    "description": "Name fo the button to add a sign to the list of favorite signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "removeFromFavorites": "Remove from favorites",
+  "@removeFromFavorites": {
+    "description": "Name fo the button to remove a sign from the list of favorite signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "triggerVideoExplanation": "Click on the video to play it, and click it again to pause it.",
+  "@triggerVideoExplanation": {
+    "description": "Description of the tooltip for the video showing a sign.",
+    "type": "text",
+    "placeholders": {}
   }
 }

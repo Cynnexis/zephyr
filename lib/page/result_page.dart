@@ -1,161 +1,72 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
+import 'package:provider/provider.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
+import 'package:zephyr/page/sign_list_page.dart';
 import 'package:zephyr/service/dico_elix.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class ResultPage extends StatefulWidget {
-  final String keywords;
+  final Widget Function(BuildContext) defaultPageBuilder;
 
-  ResultPage({Key key, @required this.keywords}) : super(key: key);
+  ResultPage({Key key, this.defaultPageBuilder}) : super(key: key);
 
   @override
   State createState() => new _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage> {
-  DicoElix _dicoElix;
-  Set<VideoPlayerController> controllers = {};
+  DicoElix _dicoElix = null;
 
   /// Result page state constructor.
-  ///
-  /// [keywords] is the list of keywords (it can be one or multiple items separated by whitespaces), and they will be
-  /// used then by  [dicoElix] to fetch the [signs] if not provided by the users.
   _ResultPageState() : super() {
     _dicoElix = DicoElix();
   }
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.keywords == null) throw "keywords cannot be null.";
-  }
-
-  void dispose() {
-    for (VideoPlayerController controller in controllers) controller.dispose();
-    controllers.clear();
-    super.dispose();
-  }
-
-  /// Play or pause the video depending on its current state.
-  ///
-  /// If the video was paused, it will play it, and vice-versa, using [controller]. It will update the current state.
-  void triggerVideo(VideoPlayerController controller) {
-    if (controller.value.isPlaying)
-      controller.pause();
-    else
-      controller.play();
-  }
-
-  @override
-  FutureBuilder build(BuildContext context) {
+  Widget build(BuildContext context) {
     // Wait for the signs
-    return FutureBuilder(
-      future: _dicoElix.getSigns([widget.keywords]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          List<Sign> signs = snapshot.data;
+    return Consumer<Keywords>(
+      builder: (context, keywords, _) => FutureBuilder(
+        future: keywords.isEmpty ? Future.value(null) : _dicoElix.getSigns(keywords),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            List<Sign> signs = snapshot.data;
 
-          // If no results were returned
-          if (signs == null || signs.isEmpty) {
-            return Center(
+            Widget noResults = Center(
               child: Text(
-                "No results",
+                ZephyrLocalization.of(context).resultsFor(0, keywords.value),
                 style: Theme.of(context).textTheme.headline4,
               ),
             );
+
+            // If no keywords were given, display the default page or the "No Results" page if the former was not given
+            if (signs == null) {
+              if (widget.defaultPageBuilder != null)
+                return widget.defaultPageBuilder(context);
+              else
+                return noResults;
+            }
+
+            // If no results were returned
+            if (signs.isEmpty) return noResults;
+
+            return SignListPage(signs: signs);
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CircularProgressIndicator(key: Key("loading_signs_results")),
+                  SizedBox(height: 32),
+                  Text(ZephyrLocalization.of(context).loading()),
+                ],
+              ),
+            );
           }
-
-          return ListView.builder(
-            key: Key("results_list"),
-            itemBuilder: (BuildContext context, int idx) {
-              if (0 <= idx && idx <= 1) return new Container(height: 35);
-
-              // Add a divider
-              if (idx.isOdd) return new Divider();
-              // Shift indices
-              int i = (idx ~/ 2) - 1;
-
-              // Print the signs
-              if (i < signs.length) {
-                if (signs[i].videoUrl == null) {
-                  return ListTile(
-                    leading: Icon(Icons.videocam_off),
-                    title: Text(signs[i].word),
-                    subtitle: Text(signs[i].definition),
-                  );
-                } else {
-                  // Wait for the video (thumbnail and controller)
-                  return FutureBuilder(
-                    key: Key("future_result_$i"),
-                    future: signs[i].getVideoPlayerControllerInitialized(),
-                    builder: (context, snapshot) {
-                      VideoPlayerController controller = snapshot.data;
-
-                      // If the video is fetched, display the thumbnail and put the video in the expanded part
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        controllers.add(controller);
-                        controller.setLooping(true);
-                        return ExpansionTile(
-                          key: Key("sign_result_$i"),
-                          leading: AspectRatio(
-                            aspectRatio: controller.value.aspectRatio,
-                            child: VideoPlayer(controller),
-                          ),
-                          title: Text(signs[i].word),
-                          subtitle: Text(signs[i].definition),
-                          trailing: Icon(Icons.keyboard_arrow_down),
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(signs[i].word, style: TextStyle(fontWeight: FontWeight.bold)),
-                                  SizedBox(height: 16.0),
-                                  GestureDetector(
-                                    onTap: () => triggerVideo(controller),
-                                    child: AspectRatio(
-                                      aspectRatio: controller.value.aspectRatio,
-                                      child: VideoPlayer(controller),
-                                    ),
-                                  ),
-                                  SizedBox(height: 16.0),
-                                  Text(signs[i].definition),
-                                ],
-                              ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        // If the thumbnail and the video are still loading, display a simple tile with a progress bar
-                        return ListTile(
-                          leading: CircularProgressIndicator(),
-                          title: Text(signs[i].word),
-                          subtitle: Text(signs[i].definition),
-                        );
-                      }
-                    },
-                  );
-                }
-              } else
-                // If the end of the list has been reached
-                return null;
-            },
-          );
-        } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CircularProgressIndicator(key: Key("loading_signs_results")),
-                SizedBox(height: 32),
-                Text(ZephyrLocalization.of(context).loading()),
-              ],
-            ),
-          );
-        }
-      },
+        },
+      ),
     );
   }
 }

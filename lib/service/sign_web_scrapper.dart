@@ -4,6 +4,7 @@ import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart';
 import 'package:meta/meta.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 
 /// Abstract class for web scrapping for sign language.
@@ -34,13 +35,14 @@ abstract class SignWebScrapper {
   ///
   /// Add the given keywords at the end of the [baseUrl], by replacing the whitespaces in the [keywords] by
   /// [whitespaceReplacement], and joining them with [whitespaceReplacement] as well.
-  String getUrl(List<String> keywords, [String whitespaceReplacement = '+']) {
+  String getUrl(Keywords keywords, [String whitespaceReplacement = '+']) {
     return baseUrl +
-        [for (var keyword in keywords) keyword.replaceAll(' ', whitespaceReplacement)].join(whitespaceReplacement);
+        [for (var keyword in keywords.valueAsKeywordsList) keyword.replaceAll(' ', whitespaceReplacement)]
+            .join(whitespaceReplacement);
   }
 
   /// Returns a list of all signs scrapped from the website from the given [keywords].
   ///
   /// This function is asynchronous.
-  Future<List<Sign>> getSigns(List<String> keywords);
+  Future<List<Sign>> getSigns(Keywords keywords);
 }

@@ -1,11 +1,29 @@
 import 'package:video_player/video_player.dart';
 
 class Sign {
-  String word;
-  String videoUrl;
-  String definition;
+  String word = '';
+  String videoUrl = null;
+  String definition = '';
 
   Sign(this.word, this.videoUrl, {this.definition});
+
+  /// Create a [Sign] from the given [json].
+  factory Sign.fromJson(Map<String, dynamic> json) {
+    return Sign(
+      json['word'] as String,
+      json['videoUrl'] as String,
+      definition: json['definition'] as String,
+    );
+  }
+
+  /// Convert this instance into a JSON object.
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'word': word,
+      'videoUrl': videoUrl,
+      'definition': definition,
+    };
+  }
 
   VideoPlayerController getVideoPlayerController() {
     return new VideoPlayerController.network(videoUrl);

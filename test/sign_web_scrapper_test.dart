@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:test/test.dart';
 import 'package:html/dom.dart';
 import 'package:matcher/matcher.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/sign_web_scrapper.dart';
 
@@ -10,7 +11,7 @@ class SignWebScrapperTest extends SignWebScrapper {
   SignWebScrapperTest() : super("https://webscraper.io/test-sites/");
 
   @override
-  Future<List<Sign>> getSigns(List<String> keywords) {
+  Future<List<Sign>> getSigns(Keywords keywords) {
     return Future.value(<Sign>[]);
   }
 }
@@ -35,14 +36,16 @@ void main() {
     test("Get URL", () {
       SignWebScrapperTest scrapper = SignWebScrapperTest();
 
-      expect(scrapper.getUrl(["tables"]), equals("https://webscraper.io/test-sites/tables"));
-      expect(scrapper.getUrl(["tables"], '-'), equals("https://webscraper.io/test-sites/tables"));
-      expect(scrapper.getUrl(["tables"], "    "), equals("https://webscraper.io/test-sites/tables"));
+      expect(scrapper.getUrl(Keywords("tables")), equals("https://webscraper.io/test-sites/tables"));
+      expect(scrapper.getUrl(Keywords("tables"), '-'), equals("https://webscraper.io/test-sites/tables"));
+      expect(scrapper.getUrl(Keywords("tables"), "    "), equals("https://webscraper.io/test-sites/tables"));
 
-      expect(scrapper.getUrl(["e-commerce/scroll"]), equals("https://webscraper.io/test-sites/e-commerce/scroll"));
-      expect(scrapper.getUrl(["e-commerce scroll"], '/'), equals("https://webscraper.io/test-sites/e-commerce/scroll"));
       expect(
-          scrapper.getUrl(["e-commerce", "scroll"], '/'), equals("https://webscraper.io/test-sites/e-commerce/scroll"));
+          scrapper.getUrl(Keywords("e-commerce/scroll")), equals("https://webscraper.io/test-sites/e-commerce/scroll"));
+      expect(scrapper.getUrl(Keywords("e-commerce scroll"), '/'),
+          equals("https://webscraper.io/test-sites/e-commerce/scroll"));
+      expect(scrapper.getUrl(Keywords(["e-commerce", "scroll"]), '/'),
+          equals("https://webscraper.io/test-sites/e-commerce/scroll"));
     });
   });
 }

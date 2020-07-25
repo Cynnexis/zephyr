@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
 class SearchPage extends StatefulWidget {
-  final Function(String keywords) onSearch;
-
-  SearchPage({Key key, this.onSearch}) : super(key: key);
+  SearchPage({Key key}) : super(key: key);
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -15,11 +15,18 @@ class _SearchPageState extends State<SearchPage> {
   final _searchFieldController = TextEditingController();
   var _enableSearch = false;
 
-  _SearchPageState() : super();
-
   @override
   void initState() {
     super.initState();
+
+    // Add _searchFieldController as a listener to the app's keywords
+    final Keywords keywords = Provider.of<Keywords>(context, listen: false);
+    keywords.addListener(() {
+      // Change only if the fields are different to avoid unnecessary callback executions.
+      if (_searchFieldController.text != keywords.value) _searchFieldController.text = keywords.value;
+    });
+
+    // Add _updateSearch() function as a listener for controller changes
     _searchFieldController.addListener(this._updateSearch);
   }
 
@@ -35,19 +42,21 @@ class _SearchPageState extends State<SearchPage> {
   /// through [_searchFieldController]. This function is designed to be used as a callback by
   /// [TextEditingController].
   void _updateSearch() {
-    setState(() {
-      _enableSearch = _searchFieldController.text.trim() != "";
-    });
+    bool enableSearch = _searchFieldController.text.trim() != "";
+    if (_enableSearch != enableSearch) setState(() => _enableSearch = enableSearch);
   }
 
   /// Send the [text] to the result page as keywords.
-  void _search([String text]) {
+  void _search(BuildContext context, [String text]) {
     if (text == null) text = _searchFieldController.text.trim();
+    if (text == null) text = '';
 
     // Close the keyboard
     FocusManager.instance.primaryFocus.unfocus();
 
-    widget.onSearch(text);
+    // Send the new keywords to the result list only if the new text is different
+    Keywords keywords = Provider.of<Keywords>(context, listen: false);
+    if (keywords.value != text) keywords.value = text;
   }
 
   /// Build the search page.
@@ -64,32 +73,52 @@ class _SearchPageState extends State<SearchPage> {
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 6),
-        child: TextField(
-          key: ValueKey("search_signs"),
-          autocorrect: true,
-          onSubmitted: _enableSearch ? _search : null,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            labelText: ZephyrLocalization.of(context).appName(),
-            hintText: ZephyrLocalization.of(context).searchSign(),
-            prefixIcon: IconButton(
-              key: Key("search_button"),
-              icon: Icon(Icons.search),
-              onPressed: _enableSearch ? _search : null,
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              key: Key("drawer_button"),
+              icon: Icon(Icons.menu),
+              tooltip: ZephyrLocalization.of(context).openDrawer(),
+              onPressed: () {
+                FocusManager.instance.primaryFocus.unfocus();
+                Scaffold.of(context).openDrawer();
+              },
             ),
-            suffixIcon: _enableSearch
-                ? IconButton(
-                    key: Key("clear_search_button"),
-                    icon: Icon(Icons.clear),
-                    onPressed: () {
-                      _searchFieldController.clear();
-                      FocusScope.of(context).requestFocus(new FocusNode());
-                    },
-                  )
-                : null,
-          ),
-          textInputAction: TextInputAction.search,
-          controller: _searchFieldController,
+            Expanded(
+              child: TextField(
+                key: Key("search_signs"),
+                autocorrect: true,
+                onSubmitted: (String text) => _search(context, text),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  labelText: ZephyrLocalization.of(context).appName(),
+                  hintText: ZephyrLocalization.of(context).searchSign(),
+                  prefixIcon: FocusScope.of(context).hasFocus
+                      ? IconButton(
+                          key: Key("search_button"),
+                          icon: Icon(Icons.search),
+                          tooltip: ZephyrLocalization.of(context).searchButton(),
+                          onPressed: () => _search(context),
+                        )
+                      : null,
+                  suffixIcon: _enableSearch
+                      ? IconButton(
+                          key: Key("clear_search_button"),
+                          icon: Icon(Icons.clear),
+                          tooltip: ZephyrLocalization.of(context).clearTextField(),
+                          onPressed: () {
+                            _searchFieldController.clear();
+                            _search(context, '');
+                            FocusScope.of(context).requestFocus(new FocusNode());
+                          },
+                        )
+                      : null,
+                ),
+                textInputAction: TextInputAction.search,
+                controller: _searchFieldController,
+              ),
+            ),
+          ],
         ),
       ),
     );

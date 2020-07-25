@@ -6,7 +6,7 @@ docker-build:
 	docker build -t cynnexis/zephyr .
 
 docker-test:
-	$(DCK_CMP_UP) test
+	$(DCK_CMP_UP) test lint
 
 docker-down:
 	docker-compose down --remove-orphans --volumes
@@ -22,6 +22,9 @@ generate-intl:
 
 update-launcher:
 	flutter pub run flutter_launcher_icons:main
+
+generate-json-code:
+	flutter pub run build_runner build
 
 lint:
 	dartfmt -n --set-exit-if-changed -l 120 .

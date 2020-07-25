@@ -1,4 +1,5 @@
 import 'package:html/dom.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/sign_web_scrapper.dart';
 
@@ -7,8 +8,11 @@ class DicoElix extends SignWebScrapper {
   DicoElix() : super("https://dico.elix-lsf.fr/dictionnaire/");
 
   @override
-  Future<List<Sign>> getSigns(List<String> keywords) async {
+  Future<List<Sign>> getSigns(Keywords keywords) async {
     List<Sign> signs = [];
+
+    if (keywords.isEmpty) return signs;
+
     Document doc = await this.getHtmlParser(this.getUrl(keywords));
     List<Element> words = doc.querySelectorAll("section.word");
     for (Element word in words) {
