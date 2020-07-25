@@ -26,12 +26,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "addToFavorites": MessageLookupByLibrary.simpleMessage("Ajouter aux favoris"),
         "appName": MessageLookupByLibrary.simpleMessage("Zéphyr"),
+        "clearTextField": MessageLookupByLibrary.simpleMessage("Effacer le texte"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favoris"),
         "loading": m0,
         "noSigns": MessageLookupByLibrary.simpleMessage("Aucun signes"),
+        "openDrawer": MessageLookupByLibrary.simpleMessage("Ouvrir la navigation"),
+        "removeFromFavorites": MessageLookupByLibrary.simpleMessage("Supprimer des favoris"),
         "resultsFor": m1,
+        "searchButton": MessageLookupByLibrary.simpleMessage("Bouton de recherche"),
         "searchSign": MessageLookupByLibrary.simpleMessage("Rechercher un signe"),
-        "searchSigns": MessageLookupByLibrary.simpleMessage("Rechercher des Signes")
+        "searchSigns": MessageLookupByLibrary.simpleMessage("Rechercher des Signes"),
+        "triggerVideoExplanation": MessageLookupByLibrary.simpleMessage(
+            "Cliquez sur la video pour la jouer, et cliquez à nouveau pour la mettre en pause.")
       };
 }

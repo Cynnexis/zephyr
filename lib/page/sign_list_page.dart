@@ -141,6 +141,9 @@ class _SignListPageState extends State<SignListPage> {
                                 builder: (context, favorites, _) => IconButton(
                                   icon: Icon(
                                       favorites.contains(widget.signs[i]) ? Icons.favorite : Icons.favorite_border),
+                                  tooltip: favorites.contains(widget.signs[i])
+                                      ? ZephyrLocalization.of(context).removeFromFavorites()
+                                      : ZephyrLocalization.of(context).addToFavorites(),
                                   onPressed: () {
                                     // Trigger favorites
                                     if (favorites.contains(widget.signs[i]))
@@ -156,11 +159,14 @@ class _SignListPageState extends State<SignListPage> {
                             ],
                           ),
                           SizedBox(height: 16.0),
-                          GestureDetector(
-                            onTap: () => triggerVideo(controller),
-                            child: AspectRatio(
-                              aspectRatio: controller.value.aspectRatio,
-                              child: VideoPlayer(controller),
+                          Tooltip(
+                            message: ZephyrLocalization.of(context).triggerVideoExplanation(),
+                            child: GestureDetector(
+                              onTap: () => triggerVideo(controller),
+                              child: AspectRatio(
+                                aspectRatio: controller.value.aspectRatio,
+                                child: VideoPlayer(controller),
+                              ),
                             ),
                           ),
                           SizedBox(height: 16.0),

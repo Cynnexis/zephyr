@@ -38,5 +38,41 @@
     "description": "Name fo the second page, where the user can see their favorite signs.",
     "type": "text",
     "placeholders": {}
+  },
+  "openDrawer": "Ouvrir la navigation",
+  "@openDrawer": {
+    "description": "Name fo the button to open the drawer.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchButton": "Bouton de recherche",
+  "@searchButton": {
+    "description": "Name fo the button to search for signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clearTextField": "Effacer le texte",
+  "@clearTextField": {
+    "description": "Name fo the button to clear the text field.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addToFavorites": "Ajouter aux favoris",
+  "@addToFavorites": {
+    "description": "Name fo the button to add a sign to the list of favorite signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "removeFromFavorites": "Supprimer des favoris",
+  "@removeFromFavorites": {
+    "description": "Name fo the button to remove a sign from the list of favorite signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "triggerVideoExplanation": "Cliquez sur la video pour la jouer, et cliquez à nouveau pour la mettre en pause.",
+  "@triggerVideoExplanation": {
+    "description": "Description of the tooltip for the video showing a sign.",
+    "type": "text",
+    "placeholders": {}
   }
 }

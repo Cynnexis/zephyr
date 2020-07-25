@@ -78,6 +78,7 @@ class _SearchPageState extends State<SearchPage> {
             IconButton(
               key: Key("drawer_button"),
               icon: Icon(Icons.menu),
+              tooltip: ZephyrLocalization.of(context).openDrawer(),
               onPressed: () {
                 FocusManager.instance.primaryFocus.unfocus();
                 Scaffold.of(context).openDrawer();
@@ -96,6 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                       ? IconButton(
                           key: Key("search_button"),
                           icon: Icon(Icons.search),
+                          tooltip: ZephyrLocalization.of(context).searchButton(),
                           onPressed: () => _search(context),
                         )
                       : null,
@@ -103,6 +105,7 @@ class _SearchPageState extends State<SearchPage> {
                       ? IconButton(
                           key: Key("clear_search_button"),
                           icon: Icon(Icons.clear),
+                          tooltip: ZephyrLocalization.of(context).clearTextField(),
                           onPressed: () {
                             _searchFieldController.clear();
                             _search(context, '');

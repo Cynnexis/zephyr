@@ -98,6 +98,60 @@ class ZephyrLocalization {
     );
   }
 
+  String openDrawer() {
+    return Intl.message(
+      "Open drawer",
+      name: "openDrawer",
+      desc: "Name fo the button to open the drawer.",
+      locale: localeName,
+    );
+  }
+
+  String searchButton() {
+    return Intl.message(
+      "Search button",
+      name: "searchButton",
+      desc: "Name fo the button to search for signs.",
+      locale: localeName,
+    );
+  }
+
+  String clearTextField() {
+    return Intl.message(
+      "Clear text field",
+      name: "clearTextField",
+      desc: "Name fo the button to clear the text field.",
+      locale: localeName,
+    );
+  }
+
+  String addToFavorites() {
+    return Intl.message(
+      "Add to favorites",
+      name: "addToFavorites",
+      desc: "Name fo the button to add a sign to the list of favorite signs.",
+      locale: localeName,
+    );
+  }
+
+  String removeFromFavorites() {
+    return Intl.message(
+      "Remove from favorites",
+      name: "removeFromFavorites",
+      desc: "Name fo the button to remove a sign from the list of favorite signs.",
+      locale: localeName,
+    );
+  }
+
+  String triggerVideoExplanation() {
+    return Intl.message(
+      "Click on the video to play it, and click it again to pause it.",
+      name: "triggerVideoExplanation",
+      desc: "Description of the tooltip for the video showing a sign.",
+      locale: localeName,
+    );
+  }
+
   //#endregion
 }
 
