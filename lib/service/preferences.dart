@@ -27,7 +27,7 @@ Future<File> saveFavorites(dynamic signs, {bool append = false}) async {
     if (signs is Iterable<Sign>)
       signs = Set<Sign>.of(signs);
     else if (signs is Favorites)
-      signs = Set<Sign>.of(signs.values);
+      signs = signs.toSet();
     else
       throw ArgumentError.value(signs, "signs");
   }

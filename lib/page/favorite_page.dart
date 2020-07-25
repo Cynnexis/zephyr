@@ -35,7 +35,7 @@ class _FavoritePageState extends State<FavoritePage> {
             ],
           );
         } else {
-          Set<Sign> signs = Set<Sign>.of(favorites.values);
+          Set<Sign> signs = favorites.toSet();
 
           // Apply filter if keywords are given
           if (keywords != null && !keywords.isEmpty) {
