@@ -71,6 +71,33 @@ class ZephyrLocalization {
     );
   }
 
+  String noSigns() {
+    return Intl.message(
+      "No signs",
+      name: "noSigns",
+      desc: "When no signs was given in the list of signs to show.",
+      locale: localeName,
+    );
+  }
+
+  String searchSigns() {
+    return Intl.message(
+      "Search Signs",
+      name: "searchSigns",
+      desc: "Name fo the first page, where the user can search for signs.",
+      locale: localeName,
+    );
+  }
+
+  String favorite() {
+    return Intl.message(
+      "Favorite",
+      name: "favorite",
+      desc: "Name fo the second page, where the user can see their favorite signs.",
+      locale: localeName,
+    );
+  }
+
   //#endregion
 }
 

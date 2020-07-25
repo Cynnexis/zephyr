@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/preferences.dart';
+import 'package:zephyr/zephyr_localization.dart';
 
 class SignListPage extends StatefulWidget {
   final List<Sign> signs;
@@ -48,7 +49,7 @@ class _SignListPageState extends State<SignListPage> {
           ),
           SizedBox(height: 32.0),
           Text(
-            "No signs",
+            ZephyrLocalization.of(context).noSigns(),
             style: Theme.of(context).textTheme.headline4,
           ),
         ],

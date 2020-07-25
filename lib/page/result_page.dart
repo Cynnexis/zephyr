@@ -36,7 +36,7 @@ class _ResultPageState extends State<ResultPage> {
 
             Widget noResults = Center(
               child: Text(
-                "No results",
+                ZephyrLocalization.of(context).resultsFor(0, keywords.value),
                 style: Theme.of(context).textTheme.headline4,
               ),
             );

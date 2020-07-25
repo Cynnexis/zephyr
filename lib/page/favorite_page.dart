@@ -4,6 +4,7 @@ import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/page/sign_list_page.dart';
 import 'package:zephyr/service/preferences.dart';
+import 'package:zephyr/zephyr_localization.dart';
 
 class FavoritePage extends StatefulWidget {
   FavoritePage({Key key}) : super(key: key);
@@ -27,7 +28,7 @@ class _FavoritePageState extends State<FavoritePage> {
               ),
               SizedBox(height: 32.0),
               Text(
-                "Favorites",
+                ZephyrLocalization.of(context).favorite(),
                 style: Theme.of(context).textTheme.headline4,
               ),
             ],
@@ -49,7 +50,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 ),
                 SizedBox(height: 32.0),
                 Text(
-                  "No results for \"${keywords.value}\"",
+                  ZephyrLocalization.of(context).resultsFor(0, keywords.value),
                   style: TextStyle(
                     color: Color.fromARGB(128, 255, 255, 255),
                     fontWeight: FontWeight.bold,

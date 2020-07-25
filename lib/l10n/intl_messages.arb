@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-06-15T16:37:22.758421",
+  "@@last_modified": "2020-07-25T15:34:50.264832",
   "appName": "Zéphyr",
   "@appName": {
     "description": "The application name.",
@@ -34,5 +34,23 @@
         "example": "minute"
       }
     }
+  },
+  "noSigns": "No signs",
+  "@noSigns": {
+    "description": "When no signs was given in the list of signs to show.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchSigns": "Search Signs",
+  "@searchSigns": {
+    "description": "Name fo the first page, where the user can search for signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favorite": "Favorite",
+  "@favorite": {
+    "description": "Name fo the second page, where the user can see their favorite signs.",
+    "type": "text",
+    "placeholders": {}
   }
 }

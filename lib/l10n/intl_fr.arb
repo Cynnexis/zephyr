@@ -20,5 +20,23 @@
   "@resultsFor": {
     "description": "Title for the results page.",
     "type": "text"
+  },
+  "noSigns": "Aucun signes",
+  "@noSigns": {
+    "description": "When no signs was given in the list of signs to show.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "searchSigns": "Rechercher des Signes",
+  "@searchSigns": {
+    "description": "Name fo the first page, where the user can search for signs.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favorite": "Favoris",
+  "@favorite": {
+    "description": "Name fo the second page, where the user can see their favorite signs.",
+    "type": "text",
+    "placeholders": {}
   }
 }

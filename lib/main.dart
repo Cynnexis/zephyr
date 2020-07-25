@@ -12,7 +12,6 @@ import 'package:zephyr/zephyr_theme.dart';
 
 import 'model/keywords.dart';
 
-// TODO: Translate app
 void main() => runApp(ZephyrApp());
 
 class ZephyrApp extends StatelessWidget {
@@ -114,7 +113,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     MainActivityState.values.asMap().forEach((i, activity) {
       drawerItems[i] = ListTile(
           leading: activity.icon,
-          title: Text(activity.name),
+          title: Text(activity.name(context)),
           onTap: () {
             // Close drawer
             Navigator.pop(context);
@@ -204,12 +203,12 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
 enum MainActivityState { SEARCH, FAVORITE }
 
 extension _MainActivityStateExtension on MainActivityState {
-  String get name {
+  String name(BuildContext context) {
     switch (this) {
       case MainActivityState.SEARCH:
-        return "Search Signs";
+        return ZephyrLocalization.of(context).searchSigns();
       case MainActivityState.FAVORITE:
-        return "Favorite";
+        return ZephyrLocalization.of(context).favorite();
       default:
         return "";
     }
