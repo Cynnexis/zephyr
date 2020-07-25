@@ -18,12 +18,14 @@ fi
 exit_code=0
 
 if [[ $1 == "lint" ]]; then
+	echo "Checking Dart files format..."
 	dartfmt -n --set-exit-if-changed -l 120 .
 	exit_code=$?
 elif [[ $1 == *"fix"* && $1 == *"lint"* ]]; then
 	dartfmt -w -l 120 .
 	exit_code=$?
 elif [[ $1 == "test" ]]; then
+	echo "Testing zephyr..."
 	flutter -v test --no-color --coverage test/*_test.dart
 	exit_code=$?
 else

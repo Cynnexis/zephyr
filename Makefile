@@ -6,7 +6,7 @@ docker-build:
 	docker build -t cynnexis/zephyr .
 
 docker-test:
-	$(DCK_CMP_UP) test
+	$(DCK_CMP_UP) test lint
 
 docker-down:
 	docker-compose down --remove-orphans --volumes
