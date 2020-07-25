@@ -32,6 +32,11 @@ class Keywords extends ChangeNotifier {
     this.value = keywords;
   }
 
+  /// Create a [Keywords] instance from the given [json].
+  factory Keywords.fromJson(Map<String, dynamic> json) => Keywords(json['value'] as String);
+
+  Map<String, dynamic> toJson() => {"value": value};
+
   void clear() => value = '';
 
   /// Check if the given [string] is contained in the keywords.
