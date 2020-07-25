@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/model/favorites.dart';
 import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/page/sign_list_page.dart';
-import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class FavoritePage extends StatefulWidget {

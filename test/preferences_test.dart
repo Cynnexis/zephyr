@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:zephyr/model/favorites.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/preferences.dart';
 

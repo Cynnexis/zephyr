@@ -10,6 +10,7 @@ import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 import 'package:zephyr/zephyr_theme.dart';
 
+import 'model/favorites.dart';
 import 'model/keywords.dart';
 
 void main() => runApp(ZephyrApp());
