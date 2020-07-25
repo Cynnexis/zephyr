@@ -139,6 +139,7 @@ class _SignListPageState extends State<SignListPage> {
                               ),
                               Consumer<Favorites>(
                                 builder: (context, favorites, _) => IconButton(
+                                  key: Key("sign_result_favorite_$i"),
                                   icon: Icon(
                                       favorites.contains(widget.signs[i]) ? Icons.favorite : Icons.favorite_border),
                                   tooltip: favorites.contains(widget.signs[i])

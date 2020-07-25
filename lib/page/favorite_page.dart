@@ -29,6 +29,7 @@ class _FavoritePageState extends State<FavoritePage> {
               SizedBox(height: 32.0),
               Text(
                 ZephyrLocalization.of(context).favorite(),
+                key: Key("favorite_no_signs"),
                 style: Theme.of(context).textTheme.headline4,
               ),
             ],

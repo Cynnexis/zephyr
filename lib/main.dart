@@ -112,6 +112,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     // Build the list of items in the drawer
     MainActivityState.values.asMap().forEach((i, activity) {
       drawerItems[i] = ListTile(
+          key: Key("drawer_item_$i"),
           leading: activity.icon,
           title: Text(activity.name(context)),
           onTap: () {
