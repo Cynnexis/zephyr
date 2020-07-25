@@ -36,7 +36,6 @@ class _FavoritePageState extends State<FavoritePage> {
           Set<Sign> signs = Set<Sign>.of(favorites.values);
 
           // Apply filter if keywords are given
-          // TODO: When giving keywords, the item dividers in the list are visible.
           if (keywords != null && !keywords.isEmpty) {
             signs = signs.where((Sign sign) => keywords.matches(sign.word)).toSet();
           }
