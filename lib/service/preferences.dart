@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:zephyr/model/favorites.dart';
+import 'package:zephyr/model/history.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 
 Future<E> _load<E extends Set<S>, S>(
@@ -90,6 +92,40 @@ Future<File> saveFavorites(dynamic signs, {bool append = false}) async {
     _getFavoriteFile(),
     loadFavorites,
     (sign) => sign.word != null && sign.word != '',
+    append: append,
+  );
+}
+
+/// Get the path to the file containing all the favorite signs.
+Future<String> _getHistoryFilePath() async {
+  final Directory dir = await getApplicationDocumentsDirectory();
+  return "${dir.path}/history.json";
+}
+
+/// Get the file containing all the favorite signs.
+Future<File> _getHistoryFile() async {
+  final String filepath = await _getHistoryFilePath();
+  return File(filepath);
+}
+
+/// Load the favorites signs from an external file.
+///
+/// Note that duplicated signs are not permitted.
+Future<History> loadHistory() async {
+  return _load<History, Keywords>(_getHistoryFile(), () => History(), (mapping) => Keywords.fromJson(mapping));
+}
+
+/// Save the favorite [signs] to an external file.
+///
+/// [signs] will be saved to an external file. If [append] is `true`, the file won't be overwritten, but the content
+/// will simply be appended. If there are incomplete signs in [signs] (such as no `word` field), they won't be saved.
+/// Note that duplicated elements are not permitted.
+Future<File> saveHistory(dynamic history, {bool append = false}) async {
+  return _save<History, Keywords>(
+    history,
+    _getHistoryFile(),
+    loadHistory,
+    (keywords) => keywords.value != null && !keywords.isEmpty,
     append: append,
   );
 }

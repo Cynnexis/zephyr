@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/model/history.dart';
 import 'package:zephyr/page/favorite_page.dart';
 import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
@@ -127,77 +128,91 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
     // Build the widget tree
     return FutureBuilder<Favorites>(
       future: loadFavorites(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-          return MultiProvider(
-            providers: <ChangeNotifierProvider>[
-              ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
-              ChangeNotifierProvider<Favorites>(create: (context) => snapshot.data),
-            ],
-            builder: (context, _) => Scaffold(
-              drawer: Drawer(
-                key: Key("drawer"),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-                        DrawerHeader(
-                          decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
-                          child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
-                        ),
-                      ] +
-                      drawerItems,
-                ),
-              ),
-              body: Padding(
-                padding: EdgeInsets.only(top: 22.0),
-                child: Center(
-                  child: Stack(
-                    fit: StackFit.loose,
-                    children: <Widget>[
-                      getActivity(context: context),
-                      SearchPage(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        } else {
-          // If the favorites are not loaded yet, show a loading screen
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage("assets/images/zephyr.png"),
-                    width: 100,
-                    height: 100,
-                  ),
-                  SizedBox(height: 16),
-                  Text(widget.title, style: TextStyle(color: Color.fromARGB(100, 255, 255, 255), fontSize: 30)),
-                  SizedBox(height: 16),
-                  // Display a circular progress indicator after 2 seconds
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: FutureBuilder(
-                      future: Future.delayed(Duration(seconds: 2)),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done)
-                          return CircularProgressIndicator();
-                        else
-                          return Container();
-                      },
+      builder: (_, favoritesSnapshot) {
+        return FutureBuilder(
+          future: Future.value(History([Keywords("test"), Keywords("bleu")])), // TODO: Load the real history
+          builder: (context, historySnapshot) {
+            if (favoritesSnapshot.connectionState == ConnectionState.done &&
+                favoritesSnapshot.data != null &&
+                historySnapshot.connectionState == ConnectionState.done &&
+                historySnapshot.data != null) {
+              return MultiProvider(
+                providers: <ChangeNotifierProvider>[
+                  ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
+                  ChangeNotifierProvider<Favorites>(create: (context) => favoritesSnapshot.data),
+                  ChangeNotifierProvider<History>(create: (context) => historySnapshot.data),
+                ],
+                builder: (context, _) => Scaffold(
+                  drawer: Drawer(
+                    key: Key("drawer"),
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: <Widget>[
+                            DrawerHeader(
+                              decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                              child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                            ),
+                          ] +
+                          drawerItems,
                     ),
                   ),
-                ],
+                  body: Padding(
+                    padding: EdgeInsets.only(top: 22.0),
+                    child: Center(
+                      child: Stack(
+                        fit: StackFit.loose,
+                        children: <Widget>[
+                          getActivity(context: context),
+                          SearchPage(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              // If the favorites are not loaded yet, show a loading screen
+              return buildLoadingScreen(context);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  /// Build the application loading screen.
+  Widget buildLoadingScreen(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image(
+              image: AssetImage("assets/images/zephyr.png"),
+              width: 100,
+              height: 100,
+            ),
+            SizedBox(height: 16),
+            Text(widget.title, style: TextStyle(color: Color.fromARGB(100, 255, 255, 255), fontSize: 30)),
+            SizedBox(height: 16),
+            // Display a circular progress indicator after 2 seconds
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: FutureBuilder(
+                future: Future.delayed(Duration(seconds: 2)),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done)
+                    return CircularProgressIndicator();
+                  else
+                    return Container();
+                },
               ),
             ),
-          );
-        }
-      },
+          ],
+        ),
+      ),
     );
   }
 }
