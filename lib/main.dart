@@ -151,7 +151,7 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                   drawerItems[MainActivityState.values.length] = ListTile(
                     key: Key("drawer_item_${MainActivityState.values.length}"),
                     leading: Icon(Icons.delete_forever),
-                    title: Text("Remove search history"),
+                    title: Text(ZephyrLocalization.of(context).removeSearchHistory()),
                     onTap: () {
                       // Close drawer
                       Navigator.pop(context);
@@ -160,17 +160,17 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text("Remove search history"),
-                            content: Text("Are you sure you want to remove your search history?"),
+                            title: Text(ZephyrLocalization.of(context).removeSearchHistory()),
+                            content: Text(ZephyrLocalization.of(context).removeSearchHistoryConfirmation()),
                             actions: <Widget>[
                               FlatButton(
                                 key: Key("remove_search_history_dialog_no"),
-                                child: Text("No"),
+                                child: Text(ZephyrLocalization.of(context).no()),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                               FlatButton(
                                 key: Key("remove_search_history_dialog_yes"),
-                                child: Text("Yes"),
+                                child: Text(ZephyrLocalization.of(context).yes()),
                                 onPressed: () {
                                   // Remove history and save it
                                   clearSearchHistory();

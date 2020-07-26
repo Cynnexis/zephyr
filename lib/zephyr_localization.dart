@@ -152,6 +152,43 @@ class ZephyrLocalization {
     );
   }
 
+  String removeSearchHistory() {
+    return Intl.message(
+      "Remove search history",
+      name: "removeSearchHistory",
+      desc: "Name of the drawer item and title of the alert dialog box that will ask if the user is sure about "
+          "deleting their search history.",
+      locale: localeName,
+    );
+  }
+
+  String removeSearchHistoryConfirmation() {
+    return Intl.message(
+      "Are you sure you want to remove your search history?",
+      name: "removeSearchHistoryConfirmation",
+      desc: "Confirmation box about the user removing their search history.",
+      locale: localeName,
+    );
+  }
+
+  String no() {
+    return Intl.message(
+      "No",
+      name: "no",
+      desc: "Button saying \"No\".",
+      locale: localeName,
+    );
+  }
+
+  String yes() {
+    return Intl.message(
+      "Yes",
+      name: "yes",
+      desc: "Button saying \"Yes\".",
+      locale: localeName,
+    );
+  }
+
   //#endregion
 }
 
