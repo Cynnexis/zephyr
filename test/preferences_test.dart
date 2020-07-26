@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zephyr/model/favorites.dart';
+import 'package:zephyr/model/history.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   Set<Sign> signs;
+  Set<Keywords> keywordsSet;
 
   group("Preferences (Favorites)", () {
     setUpAll(() async {
@@ -43,12 +46,27 @@ void main() {
             definition: "1. voie de communication assez étroite, non goudronnée, souvent en campagne."),
         Sign("Big Bang", null),
       };
+      keywordsSet = <Keywords>{
+        Keywords("test"),
+        Keywords("bleu"),
+        Keywords("rouge"),
+        Keywords("vert"),
+        Keywords("jaune"),
+        Keywords("violet"),
+        Keywords("rose"),
+      };
     });
 
-    test("Saving & Loading", () async {
+    test("Saving & Loading Favorites", () async {
       await saveFavorites(signs);
       final Favorites loadedSigns = await loadFavorites();
       expect(signs, equals(loadedSigns.values));
+    });
+
+    test("Saving & Loading History", () async {
+      await saveHistory(keywordsSet);
+      final History loadedHistory = await loadHistory();
+      expect(keywordsSet, equals(loadedHistory.values));
     });
 
     test("Append Favorites", () async {

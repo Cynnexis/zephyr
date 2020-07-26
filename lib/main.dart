@@ -164,10 +164,12 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                             content: Text("Are you sure you want to remove your search history?"),
                             actions: <Widget>[
                               FlatButton(
+                                key: Key("remove_search_history_dialog_no"),
                                 child: Text("No"),
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                               FlatButton(
+                                key: Key("remove_search_history_dialog_yes"),
                                 child: Text("Yes"),
                                 onPressed: () {
                                   // Remove history and save it
