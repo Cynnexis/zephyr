@@ -1,104 +1,65 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:zephyr/model/favorites.dart';
+import 'package:zephyr/model/history.dart';
+import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 
-/// List of favorites signs. It is also a [ChangeNotifier] that notifies all its listeners every time the list is
-/// modified.
-class Favorites extends ChangeNotifier {
-  Set<Sign> _values = Set();
+Future<E> _load<E extends Set<S>, S>(
+    dynamic file, E Function() constructor, S Function(Map<String, dynamic>) jsonToS) async {
+  if (file is Future<File>)
+    file = await file;
+  else if (!(file is File))
+    throw ArgumentError("file is neither a Future<File> nor a File.\nfile type: ${file.runtimeType}");
 
-  //region PROPERTIES
+  final E elements = constructor();
 
-  int get length => _values.length;
+  if (!file.existsSync()) return elements;
+  final String json = await file.readAsString();
+  final List<dynamic> decodedJson = jsonDecode(json);
+  for (dynamic entry in decodedJson) elements.add(jsonToS(entry));
 
-  bool get isEmpty => length == 0;
+  return elements;
+}
 
-  List<Sign> get values => List.unmodifiable(_values);
+Future<File> _save<E extends Set<S>, S>(
+    dynamic elements, dynamic file, Future<E> Function() load, bool Function(S) filter,
+    {bool append = false}) async {
+  if (file is Future<File>)
+    file = await file;
+  else if (!(file is File))
+    throw ArgumentError("file is neither a Future<File> nor a File.\nfile type: ${file.runtimeType}");
 
-  void set values(dynamic signs) {
-    if (signs == null) throw "signs cannot be null.";
-
-    int oldHash = _values.hashCode;
-    if (signs is Set<Sign>)
-      _values = signs;
-    else if (signs is Iterable<Sign>)
-      _values = Set<Sign>.of(signs);
+  if (!(elements is Set<S>)) {
+    if (elements is Iterable<S>)
+      elements = Set<S>.of(elements);
+    else if (elements is E)
+      elements = elements.toSet();
     else
-      throw TypeError();
-
-    // Notify listeners only if the hash of the set has changed
-    if (_values.hashCode != oldHash) notifyListeners();
+      throw ArgumentError("file is neither a Set nor an Iterable nor E.\nfile type: ${file.runtimeType}");
   }
 
-  //endregion
+  Set<S> allElements = Set();
 
-  //region CONSTRUCTORS
-
-  /// Default constructors for [Favorites].
-  ///
-  /// Construct a list of favorites signs from [signs]. The listeners will be notify at the end.
-  Favorites([dynamic signs]) {
-    if (signs != null) this.values = signs;
+  // If in "append" mode, add the elements already in the file
+  if (append) {
+    final E loadedElements = await load();
+    allElements.addAll(loadedElements);
   }
 
-  /// Construct a copy of [favorites].
-  Favorites.from(Favorites favorites) {
-    this.values = favorites.values;
-  }
+  // Add the given elements (after adding the loaded values if `append` is true)
+  allElements.addAll(elements);
 
-  /// Create a [Favorites] instance by loading the value from the internal storage. Note that this operations is
-  /// asynchronous, and that the listeners will be notified if the loading operation succeeds.
-  ///
-  /// The [onSuccess] callback will be called if the loading operation succeeded and the values are loaded. It takes a
-  /// [Favorites] (this instance) as an argument. The [onError] will be called if an error occurred, and the error will
-  /// be passed as an argument (note that if [onError] is ignored and an error occurred, the exception will be raised
-  /// instead). Finally, [onComplete] will be called at the end of the operation.
-  Favorites.load([void Function(Favorites) onSuccess, void Function(Error) onError, void Function() onComplete]) {
-    loadFavorites().then((fav) {
-      this.values = fav.values;
-      if (onSuccess != null) onSuccess(this);
-    }).catchError((e) {
-      if (onError != null)
-        onError(e);
-      else
-        throw e;
-    }).whenComplete(() {
-      if (onComplete != null) onComplete();
-    });
-  }
+  // Remove empty elements.
+  allElements = allElements.where(filter).toSet();
 
-  //endregion
+  // Create a list that contains all the JSON values of the elements in `allElements`
+  final List<String> jsonElements = List.of([for (S sub_element in allElements) jsonEncode(sub_element)]);
 
-  bool add(Sign sign) {
-    if (sign == null) throw "sign cannot be null";
-    bool result = _values.add(sign);
-    if (result) notifyListeners();
-
-    return result;
-  }
-
-  void addAll(Iterable<Sign> signs) {
-    for (Sign sign in signs) add(sign);
-  }
-
-  void clear() {
-    if (length > 0) {
-      _values.clear();
-      notifyListeners();
-    }
-  }
-
-  bool contains(Sign sign) => _values.contains(sign);
-
-  bool remove(Sign sign) {
-    bool result = _values.remove(sign);
-    if (result) notifyListeners();
-
-    return result;
-  }
+  final String json = '[' + jsonElements.join(", ") + ']';
+  return file.writeAsString(json, mode: FileMode.writeOnly);
 }
 
 /// Get the path to the file containing all the favorite signs.
@@ -113,54 +74,58 @@ Future<File> _getFavoriteFile() async {
   return File(filepath);
 }
 
+/// Load the favorites signs from an external file.
+///
+/// Note that duplicated signs are not permitted.
+Future<Favorites> loadFavorites() async {
+  return _load<Favorites, Sign>(_getFavoriteFile(), () => Favorites(), (mapping) => Sign.fromJson(mapping));
+}
+
 /// Save the favorite [signs] to an external file.
 ///
 /// [signs] will be saved to an external file. If [append] is `true`, the file won't be overwritten, but the content
 /// will simply be appended. If there are incomplete signs in [signs] (such as no `word` field), they won't be saved.
 /// Note that duplicated elements are not permitted.
 Future<File> saveFavorites(dynamic signs, {bool append = false}) async {
-  if (!(signs is Set<Sign>)) {
-    if (signs is Iterable<Sign>)
-      signs = Set<Sign>.of(signs);
-    else if (signs is Favorites)
-      signs = Set<Sign>.of(signs.values);
-    else
-      throw ArgumentError.value(signs, "signs");
-  }
+  return _save<Favorites, Sign>(
+    signs,
+    _getFavoriteFile(),
+    loadFavorites,
+    (sign) => sign.word != null && sign.word != '',
+    append: append,
+  );
+}
 
-  Set<Sign> allSigns = Set();
+/// Get the path to the file containing all the favorite signs.
+Future<String> _getHistoryFilePath() async {
+  final Directory dir = await getApplicationDocumentsDirectory();
+  return "${dir.path}/history.json";
+}
 
-  // If in "append" mode, add the favorites already in the file
-  if (append) {
-    final Favorites loadedSigns = await loadFavorites();
-    allSigns.addAll(loadedSigns.values);
-  }
-
-  // Add the given signs (after adding the loaded values if `append` is true)
-  allSigns.addAll(signs);
-
-  // Filter `jsonSigns` to remove empty signs (without `word` field).
-  allSigns = allSigns.where((sign) => sign.word != null && sign.word != '').toSet();
-
-  // Create a list that contains all the JSON values of the signs in `allSigns`
-  final List<String> jsonSigns = List.of([for (Sign sign in allSigns) jsonEncode(sign)]);
-
-  final String json = '[' + jsonSigns.join(", ") + ']';
-  final File file = await _getFavoriteFile();
-  return file.writeAsString(json, mode: FileMode.writeOnly);
+/// Get the file containing all the favorite signs.
+Future<File> _getHistoryFile() async {
+  final String filepath = await _getHistoryFilePath();
+  return File(filepath);
 }
 
 /// Load the favorites signs from an external file.
 ///
 /// Note that duplicated signs are not permitted.
-Future<Favorites> loadFavorites() async {
-  final Favorites favorites = Favorites();
+Future<History> loadHistory() async {
+  return _load<History, Keywords>(_getHistoryFile(), () => History(), (mapping) => Keywords.fromJson(mapping));
+}
 
-  final File file = await _getFavoriteFile();
-  if (!file.existsSync()) return favorites;
-  final String json = await file.readAsString();
-  final List<dynamic> decodedJson = jsonDecode(json);
-  for (dynamic entry in decodedJson) favorites.add(Sign.fromJson(entry));
-
-  return favorites;
+/// Save the favorite [signs] to an external file.
+///
+/// [signs] will be saved to an external file. If [append] is `true`, the file won't be overwritten, but the content
+/// will simply be appended. If there are incomplete signs in [signs] (such as no `word` field), they won't be saved.
+/// Note that duplicated elements are not permitted.
+Future<File> saveHistory(dynamic history, {bool append = false}) async {
+  return _save<History, Keywords>(
+    history,
+    _getHistoryFile(),
+    loadHistory,
+    (keywords) => keywords.value != null && !keywords.isEmpty,
+    append: append,
+  );
 }

@@ -72,7 +72,7 @@ void main() {
       await triggerFavoriteSign(5);
 
       // Search for "vert"
-      await searchSigns("vert");
+      await searchSigns("vert", clear: true);
       await triggerFavoriteSign(2);
 
       // Go to the Favorites page and check that "rouge" and "vert" are there
@@ -91,12 +91,27 @@ void main() {
       await searchSigns("rouge");
       await triggerFavoriteSign(5);
 
-      await searchSigns("vert");
+      await searchSigns("vert", clear: true);
       await triggerFavoriteSign(2);
 
       // Go to the favorite page, and check that it's empty
       await goToDrawer(1);
       expect(find.byValueKey("favorite_no_signs"), isNotNull);
+    }, timeout: timeout);
+  }, timeout: timeout);
+
+  group("History", () {
+    setUpAll(setUpAllForGroup);
+    tearDownAll(tearDownAllForGroup);
+
+    test("Remove search history", () async {
+      await goToDrawer(2);
+
+      // Get the alert dialog box
+      ByType alertDialog = find.byType("AlertDialog");
+      expect(alertDialog, isNotNull);
+      await driver.tap(find.byValueKey("remove_search_history_dialog_yes"));
+      sleep(sleepingTime);
     }, timeout: timeout);
   }, timeout: timeout);
 }
@@ -114,10 +129,9 @@ void tearDownAllForGroup() {
 }
 
 /// Enter a text in the search bar. Wait for the text to be in the field.
-void enterTextInSearchBar(String text) async {
+void enterTextInSearchBar(String text, {bool clear: false}) async {
   // Clear the field if needed
-  String searchFieldText = await driver.getText(searchFinder);
-  if (searchFieldText.length > 0) {
+  if (clear) {
     await driver.tap(clearButtonFinder);
     sleep(sleepingTime);
   }
@@ -125,13 +139,13 @@ void enterTextInSearchBar(String text) async {
   await driver.tap(searchFinder);
   await driver.enterText(text);
   await driver.waitFor(find.text(text));
-  expect(await driver.getText(searchFinder), text);
+  expect(find.descendant(of: searchFinder, matching: find.text(text)), isNotNull);
 }
 
 /// Search signs using the search bar by entering the given [keywords] and then clicking on the search button. The
 /// function will wait for the result to be fully loaded.
-void searchSigns(String keywords) async {
-  await enterTextInSearchBar(keywords);
+void searchSigns(String keywords, {bool clear: false}) async {
+  await enterTextInSearchBar(keywords, clear: clear);
 
   await driver.tap(searchButtonFinder);
   expect(find.byType("CircularProgressIndicator"), isNotNull);
@@ -140,19 +154,27 @@ void searchSigns(String keywords) async {
 
 /// Open the drawer and go to the activity number [itemIndex] (0-indexed).
 void goToDrawer(int itemIndex) async {
+  print("Going to drawer item $itemIndex...\nOpening drawer...");
   await driver.tap(drawerButton);
+  sleep(sleepingTime);
+  print("Selecting drawer item $itemIndex...");
   await driver.tap(find.byValueKey("drawer_item_$itemIndex"));
   await driver.waitForAbsent(loadingBar);
+  print("Done.");
   sleep(sleepingTime);
 }
 
 /// Add/remove a sign from favorites from the search page or favorite page.
 void triggerFavoriteSign(int indexInList) async {
+  print("Triggering the favorite button for item $indexInList...\nSearching for it in list...");
   await driver.scrollUntilVisible(find.byValueKey("signs_list"), find.byValueKey("sign_result_$indexInList"),
       dyScroll: -50.0);
+  print("Item $indexInList found. Opening list tile...");
   await driver.tap(find.byValueKey("sign_result_$indexInList"));
   final ByValueKey favoriteButton = find.byValueKey("sign_result_favorite_$indexInList");
   expect(favoriteButton, isNotNull);
+  print("Triggering favorite button...");
   await driver.tap(favoriteButton);
+  print("Done.");
   sleep(sleepingTime);
 }

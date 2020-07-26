@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/model/history.dart';
 import 'package:zephyr/page/favorite_page.dart';
 import 'package:zephyr/page/result_page.dart';
 import 'package:zephyr/page/search_page.dart';
@@ -10,6 +11,7 @@ import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 import 'package:zephyr/zephyr_theme.dart';
 
+import 'model/favorites.dart';
 import 'model/keywords.dart';
 
 void main() => runApp(ZephyrApp());
@@ -107,96 +109,155 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    List<ListTile> drawerItems = List(MainActivityState.values.length);
-
-    // Build the list of items in the drawer
-    MainActivityState.values.asMap().forEach((i, activity) {
-      drawerItems[i] = ListTile(
-          key: Key("drawer_item_$i"),
-          leading: activity.icon,
-          title: Text(activity.name(context)),
-          onTap: () {
-            // Close drawer
-            Navigator.pop(context);
-            // Change the activity state if different (avoid refreshing tree)
-            if (currentActivityState != activity) setState(() => currentActivityState = activity);
-          });
-    });
-
     // Build the widget tree
     return FutureBuilder<Favorites>(
       future: loadFavorites(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done && snapshot.data != null) {
-          return MultiProvider(
-            providers: <ChangeNotifierProvider>[
-              ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
-              ChangeNotifierProvider<Favorites>(create: (context) => snapshot.data),
-            ],
-            builder: (context, _) => Scaffold(
-              drawer: Drawer(
-                key: Key("drawer"),
-                child: ListView(
-                  padding: EdgeInsets.zero,
-                  children: <Widget>[
-                        DrawerHeader(
-                          decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
-                          child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
-                        ),
-                      ] +
-                      drawerItems,
-                ),
-              ),
-              body: Padding(
-                padding: EdgeInsets.only(top: 22.0),
-                child: Center(
-                  child: Stack(
-                    fit: StackFit.loose,
-                    children: <Widget>[
-                      getActivity(context: context),
-                      SearchPage(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        } else {
-          // If the favorites are not loaded yet, show a loading screen
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage("assets/images/zephyr.png"),
-                    width: 100,
-                    height: 100,
-                  ),
-                  SizedBox(height: 16),
-                  Text(widget.title, style: TextStyle(color: Color.fromARGB(100, 255, 255, 255), fontSize: 30)),
-                  SizedBox(height: 16),
-                  // Display a circular progress indicator after 2 seconds
-                  SizedBox(
-                    width: 30,
-                    height: 30,
-                    child: FutureBuilder(
-                      future: Future.delayed(Duration(seconds: 2)),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done)
-                          return CircularProgressIndicator();
-                        else
-                          return Container();
-                      },
-                    ),
-                  ),
+      builder: (_, favoritesSnapshot) {
+        return FutureBuilder(
+          future: loadHistory(),
+          builder: (context, historySnapshot) {
+            if (favoritesSnapshot.connectionState == ConnectionState.done &&
+                favoritesSnapshot.data != null &&
+                historySnapshot.connectionState == ConnectionState.done &&
+                historySnapshot.data != null) {
+              return MultiProvider(
+                providers: <ChangeNotifierProvider>[
+                  ChangeNotifierProvider<Keywords>(create: (context) => Keywords()),
+                  ChangeNotifierProvider<Favorites>(create: (context) => favoritesSnapshot.data),
+                  ChangeNotifierProvider<History>(create: (context) => historySnapshot.data),
                 ],
+                builder: (context, _) {
+                  // Build the list of items in the drawer
+                  List<ListTile> drawerItems = List(MainActivityState.values.length + 1);
+                  MainActivityState.values.asMap().forEach((i, activity) {
+                    drawerItems[i] = ListTile(
+                        key: Key("drawer_item_$i"),
+                        leading: activity.icon,
+                        title: Text(activity.name(context)),
+                        onTap: () {
+                          // Close drawer
+                          Navigator.pop(context);
+                          // Change the activity state if different (avoid refreshing tree)
+                          if (currentActivityState != activity) setState(() => currentActivityState = activity);
+                        });
+                  });
+
+                  var clearSearchHistory = () {
+                    History history = Provider.of<History>(context, listen: false);
+                    history.clear();
+                    saveHistory(history);
+                  };
+
+                  drawerItems[MainActivityState.values.length] = ListTile(
+                    key: Key("drawer_item_${MainActivityState.values.length}"),
+                    leading: Icon(Icons.delete_forever),
+                    title: Text(ZephyrLocalization.of(context).removeSearchHistory()),
+                    onTap: () {
+                      // Close drawer
+                      Navigator.pop(context);
+                      // Display a dialog box to confirm the action
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(ZephyrLocalization.of(context).removeSearchHistory()),
+                            content: Text(ZephyrLocalization.of(context).removeSearchHistoryConfirmation()),
+                            actions: <Widget>[
+                              FlatButton(
+                                key: Key("remove_search_history_dialog_no"),
+                                child: Text(ZephyrLocalization.of(context).no()),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                              FlatButton(
+                                key: Key("remove_search_history_dialog_yes"),
+                                child: Text(ZephyrLocalization.of(context).yes()),
+                                onPressed: () {
+                                  // Remove history and save it
+                                  clearSearchHistory();
+                                  // Close dialog
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
+
+                  // Build the main app structure
+                  return Scaffold(
+                    drawer: Drawer(
+                      key: Key("drawer"),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                              DrawerHeader(
+                                decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                                child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                              ),
+                            ] +
+                            drawerItems,
+                      ),
+                    ),
+                    body: Padding(
+                      padding: EdgeInsets.only(top: 22.0),
+                      child: Center(
+                        child: Stack(
+                          fit: StackFit.loose,
+                          children: <Widget>[
+                            getActivity(context: context),
+                            SearchPage(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            } else {
+              // If the favorites are not loaded yet, show a loading screen
+              return buildLoadingScreen(context);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  /// Build the application loading screen.
+  Widget buildLoadingScreen(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image(
+              image: AssetImage("assets/images/zephyr.png"),
+              width: 100,
+              height: 100,
+            ),
+            SizedBox(height: 16),
+            Text(widget.title, style: TextStyle(color: Color.fromARGB(100, 255, 255, 255), fontSize: 30)),
+            SizedBox(height: 16),
+            // Display a circular progress indicator after 2 seconds
+            SizedBox(
+              width: 30,
+              height: 30,
+              child: FutureBuilder(
+                future: Future.delayed(Duration(seconds: 2)),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done)
+                    return CircularProgressIndicator();
+                  else
+                    return Container();
+                },
               ),
             ),
-          );
-        }
-      },
+          ],
+        ),
+      ),
     );
   }
 }
