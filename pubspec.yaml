@@ -53,6 +53,7 @@ dev_dependencies:
 
   build_runner: 1.10.0
   json_serializable: 3.3.0
+  flutter_typeahead: 1.8.6
 
 
 # For information on the generic Dart part of this file, see the

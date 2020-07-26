@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
+import 'package:zephyr/model/favorites.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';

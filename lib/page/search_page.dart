@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/model/history.dart';
 import 'package:zephyr/model/keywords.dart';
+import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
@@ -51,8 +54,17 @@ class _SearchPageState extends State<SearchPage> {
     if (text == null) text = _searchFieldController.text.trim();
     if (text == null) text = '';
 
+    if (_searchFieldController.text != text) _searchFieldController.text = text;
+
     // Close the keyboard
     FocusManager.instance.primaryFocus.unfocus();
+
+    // Save [text] to the history
+    if (text != '') {
+      History history = Provider.of<History>(context, listen: false);
+      history.add(Keywords(text));
+      saveHistory(history);
+    }
 
     // Send the new keywords to the result list only if the new text is different
     Keywords keywords = Provider.of<Keywords>(context, listen: false);
@@ -85,37 +97,54 @@ class _SearchPageState extends State<SearchPage> {
               },
             ),
             Expanded(
-              child: TextField(
-                key: Key("search_signs"),
-                autocorrect: true,
-                onSubmitted: (String text) => _search(context, text),
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  labelText: ZephyrLocalization.of(context).appName(),
-                  hintText: ZephyrLocalization.of(context).searchSign(),
-                  prefixIcon: FocusScope.of(context).hasFocus
-                      ? IconButton(
-                          key: Key("search_button"),
-                          icon: Icon(Icons.search),
-                          tooltip: ZephyrLocalization.of(context).searchButton(),
-                          onPressed: () => _search(context),
-                        )
-                      : null,
-                  suffixIcon: _enableSearch
-                      ? IconButton(
-                          key: Key("clear_search_button"),
-                          icon: Icon(Icons.clear),
-                          tooltip: ZephyrLocalization.of(context).clearTextField(),
-                          onPressed: () {
-                            _searchFieldController.clear();
-                            _search(context, '');
-                            FocusScope.of(context).requestFocus(new FocusNode());
-                          },
-                        )
-                      : null,
+              child: Consumer<History>(
+                builder: (context, history, _) => TypeAheadField<Keywords>(
+                  key: Key("search_signs"),
+                  textFieldConfiguration: TextFieldConfiguration<Keywords>(
+                    autocorrect: true,
+                    onSubmitted: (dynamic keywords) =>
+                        _search(context, keywords is Keywords ? keywords.value : keywords),
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      labelText: ZephyrLocalization.of(context).appName(),
+                      hintText: ZephyrLocalization.of(context).searchSign(),
+                      prefixIcon: FocusScope.of(context).hasFocus
+                          ? IconButton(
+                              key: Key("search_button"),
+                              icon: Icon(Icons.search),
+                              tooltip: ZephyrLocalization.of(context).searchButton(),
+                              onPressed: () => _search(context),
+                            )
+                          : null,
+                      suffixIcon: _enableSearch
+                          ? IconButton(
+                              key: Key("clear_search_button"),
+                              icon: Icon(Icons.clear),
+                              tooltip: ZephyrLocalization.of(context).clearTextField(),
+                              onPressed: () {
+                                _searchFieldController.clear();
+                                _search(context, '');
+                                FocusScope.of(context).requestFocus(new FocusNode());
+                              },
+                            )
+                          : null,
+                    ),
+                    textInputAction: TextInputAction.search,
+                    controller: _searchFieldController,
+                  ),
+                  hideOnEmpty: true,
+                  suggestionsCallback: (String pattern) {
+                    return history.where((keywords) => keywords.matches(pattern));
+                  },
+                  itemBuilder: (BuildContext context, Keywords keywords) {
+                    return ListTile(
+                      leading: Icon(Icons.history),
+                      title: Text(keywords.value),
+                    );
+                  },
+                  transitionBuilder: (context, suggestionsBox, controller) => suggestionsBox,
+                  onSuggestionSelected: (Keywords keywords) => _search(context, keywords.value),
                 ),
-                textInputAction: TextInputAction.search,
-                controller: _searchFieldController,
               ),
             ),
           ],

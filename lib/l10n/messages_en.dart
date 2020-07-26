@@ -31,14 +31,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearTextField": MessageLookupByLibrary.simpleMessage("Clear text field"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
         "loading": m0,
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "noSigns": MessageLookupByLibrary.simpleMessage("No signs"),
         "openDrawer": MessageLookupByLibrary.simpleMessage("Open drawer"),
         "removeFromFavorites": MessageLookupByLibrary.simpleMessage("Remove from favorites"),
+        "removeSearchHistory": MessageLookupByLibrary.simpleMessage("Remove search history"),
+        "removeSearchHistoryConfirmation":
+            MessageLookupByLibrary.simpleMessage("Are you sure you want to remove your search history?"),
         "resultsFor": m1,
         "searchButton": MessageLookupByLibrary.simpleMessage("Search button"),
         "searchSign": MessageLookupByLibrary.simpleMessage("Search a sign"),
         "searchSigns": MessageLookupByLibrary.simpleMessage("Search Signs"),
         "triggerVideoExplanation":
-            MessageLookupByLibrary.simpleMessage("Click on the video to play it, and click it again to pause it.")
+            MessageLookupByLibrary.simpleMessage("Click on the video to play it, and click it again to pause it."),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
 }

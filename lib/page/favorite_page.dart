@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zephyr/model/favorites.dart';
 import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/page/sign_list_page.dart';
-import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -35,7 +35,7 @@ class _FavoritePageState extends State<FavoritePage> {
             ],
           );
         } else {
-          Set<Sign> signs = Set<Sign>.of(favorites.values);
+          Set<Sign> signs = favorites.toSet();
 
           // Apply filter if keywords are given
           if (keywords != null && !keywords.isEmpty) {

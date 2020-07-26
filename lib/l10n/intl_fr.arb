@@ -74,5 +74,29 @@
     "description": "Description of the tooltip for the video showing a sign.",
     "type": "text",
     "placeholders": {}
+  },
+  "removeSearchHistory": "Supprimer l'historique de recherche",
+  "@removeSearchHistory": {
+    "description": "Name of the drawer item and title of the alert dialog box that will ask if the user is sure about deleting their search history.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "removeSearchHistoryConfirmation": "Êtes-vous sûr de vouloir supprimer votre historique de recherche ?",
+  "@removeSearchHistoryConfirmation": {
+    "description": "Confirmation box about the user removing their search history.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "Non",
+  "@no": {
+    "description": "Button saying \"No\".",
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Oui",
+  "@yes": {
+    "description": "Button saying \"Yes\".",
+    "type": "text",
+    "placeholders": {}
   }
 }

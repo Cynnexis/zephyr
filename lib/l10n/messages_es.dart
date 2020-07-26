@@ -31,14 +31,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "clearTextField": MessageLookupByLibrary.simpleMessage("Borrar texto"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favoritos"),
         "loading": m0,
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "noSigns": MessageLookupByLibrary.simpleMessage("Sin signos"),
         "openDrawer": MessageLookupByLibrary.simpleMessage("Navegación abierta"),
         "removeFromFavorites": MessageLookupByLibrary.simpleMessage("Quitar de favoritos"),
+        "removeSearchHistory": MessageLookupByLibrary.simpleMessage("Eliminar historial de búsqueda"),
+        "removeSearchHistoryConfirmation":
+            MessageLookupByLibrary.simpleMessage("¿Estás seguro de que deseas eliminar tu historial de búsqueda?"),
         "resultsFor": m1,
         "searchButton": MessageLookupByLibrary.simpleMessage("Botón de búsqueda"),
         "searchSign": MessageLookupByLibrary.simpleMessage("Busca una señal"),
         "searchSigns": MessageLookupByLibrary.simpleMessage("Busque Signos"),
         "triggerVideoExplanation": MessageLookupByLibrary.simpleMessage(
-            "Haga clic en el video para reproducirlo y haga clic nuevamente para pausarlo.")
+            "Haga clic en el video para reproducirlo y haga clic nuevamente para pausarlo."),
+        "yes": MessageLookupByLibrary.simpleMessage("Si")
       };
 }
