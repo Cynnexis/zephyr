@@ -3,6 +3,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
 import 'package:zephyr/model/history.dart';
 import 'package:zephyr/model/keywords.dart';
+import 'package:zephyr/service/preferences.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 /// Page that display the search bar and a search button.
@@ -53,10 +54,17 @@ class _SearchPageState extends State<SearchPage> {
     if (text == null) text = _searchFieldController.text.trim();
     if (text == null) text = '';
 
+    if (_searchFieldController.text != text) _searchFieldController.text = text;
+
     // Close the keyboard
     FocusManager.instance.primaryFocus.unfocus();
 
-    // TODO: Save [text] to the history
+    // Save [text] to the history
+    if (text != '') {
+      History history = Provider.of<History>(context, listen: false);
+      history.add(Keywords(text));
+      saveHistory(history);
+    }
 
     // Send the new keywords to the result list only if the new text is different
     Keywords keywords = Provider.of<Keywords>(context, listen: false);
@@ -90,10 +98,12 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Expanded(
               child: Consumer<History>(
-                builder: (context, history, _) => TypeAheadFormField<Keywords>(
+                builder: (context, history, _) => TypeAheadField<Keywords>(
                   key: Key("search_signs"),
                   textFieldConfiguration: TextFieldConfiguration<Keywords>(
                     autocorrect: true,
+                    onSubmitted: (dynamic keywords) =>
+                        _search(context, keywords is Keywords ? keywords.value : keywords),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       labelText: ZephyrLocalization.of(context).appName(),
@@ -122,6 +132,7 @@ class _SearchPageState extends State<SearchPage> {
                     textInputAction: TextInputAction.search,
                     controller: _searchFieldController,
                   ),
+                  hideOnEmpty: true,
                   suggestionsCallback: (String pattern) {
                     return history.where((keywords) => keywords.matches(pattern));
                   },
@@ -132,15 +143,7 @@ class _SearchPageState extends State<SearchPage> {
                     );
                   },
                   transitionBuilder: (context, suggestionsBox, controller) => suggestionsBox,
-                  onSuggestionSelected: (Keywords keywords) {
-                    _searchFieldController.text = keywords.value;
-                    _search(context, keywords.value);
-                  },
-                  validator: (input) => input.isEmpty ? ZephyrLocalization.of(context).searchSign() : null,
-                  onSaved: (String input) {
-                    _searchFieldController.text = input;
-                    _search(context, input);
-                  },
+                  onSuggestionSelected: (Keywords keywords) => _search(context, keywords.value),
                 ),
               ),
             ),

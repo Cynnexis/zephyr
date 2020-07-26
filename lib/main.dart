@@ -109,28 +109,12 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    List<ListTile> drawerItems = List(MainActivityState.values.length);
-
-    // Build the list of items in the drawer
-    MainActivityState.values.asMap().forEach((i, activity) {
-      drawerItems[i] = ListTile(
-          key: Key("drawer_item_$i"),
-          leading: activity.icon,
-          title: Text(activity.name(context)),
-          onTap: () {
-            // Close drawer
-            Navigator.pop(context);
-            // Change the activity state if different (avoid refreshing tree)
-            if (currentActivityState != activity) setState(() => currentActivityState = activity);
-          });
-    });
-
     // Build the widget tree
     return FutureBuilder<Favorites>(
       future: loadFavorites(),
       builder: (_, favoritesSnapshot) {
         return FutureBuilder(
-          future: Future.value(History([Keywords("test"), Keywords("bleu")])), // TODO: Load the real history
+          future: loadHistory(),
           builder: (context, historySnapshot) {
             if (favoritesSnapshot.connectionState == ConnectionState.done &&
                 favoritesSnapshot.data != null &&
@@ -142,33 +126,92 @@ class _ZephyrHomeState extends State<ZephyrHome> with WidgetsBindingObserver {
                   ChangeNotifierProvider<Favorites>(create: (context) => favoritesSnapshot.data),
                   ChangeNotifierProvider<History>(create: (context) => historySnapshot.data),
                 ],
-                builder: (context, _) => Scaffold(
-                  drawer: Drawer(
-                    key: Key("drawer"),
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: <Widget>[
-                            DrawerHeader(
-                              decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
-                              child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
-                            ),
-                          ] +
-                          drawerItems,
-                    ),
-                  ),
-                  body: Padding(
-                    padding: EdgeInsets.only(top: 22.0),
-                    child: Center(
-                      child: Stack(
-                        fit: StackFit.loose,
+                builder: (context, _) {
+                  // Build the list of items in the drawer
+                  List<ListTile> drawerItems = List(MainActivityState.values.length + 1);
+                  MainActivityState.values.asMap().forEach((i, activity) {
+                    drawerItems[i] = ListTile(
+                        key: Key("drawer_item_$i"),
+                        leading: activity.icon,
+                        title: Text(activity.name(context)),
+                        onTap: () {
+                          // Close drawer
+                          Navigator.pop(context);
+                          // Change the activity state if different (avoid refreshing tree)
+                          if (currentActivityState != activity) setState(() => currentActivityState = activity);
+                        });
+                  });
+
+                  var clearSearchHistory = () {
+                    History history = Provider.of<History>(context, listen: false);
+                    history.clear();
+                    saveHistory(history);
+                  };
+
+                  drawerItems[MainActivityState.values.length] = ListTile(
+                    key: Key("drawer_item_${MainActivityState.values.length}"),
+                    leading: Icon(Icons.delete_forever),
+                    title: Text("Remove search history"),
+                    onTap: () {
+                      // Close drawer
+                      Navigator.pop(context);
+                      // Display a dialog box to confirm the action
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text("Remove search history"),
+                            content: Text("Are you sure you want to remove your search history?"),
+                            actions: <Widget>[
+                              FlatButton(
+                                child: Text("No"),
+                                onPressed: () => Navigator.of(context).pop(),
+                              ),
+                              FlatButton(
+                                child: Text("Yes"),
+                                onPressed: () {
+                                  // Remove history and save it
+                                  clearSearchHistory();
+                                  // Close dialog
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  );
+
+                  // Build the main app structure
+                  return Scaffold(
+                    drawer: Drawer(
+                      key: Key("drawer"),
+                      child: ListView(
+                        padding: EdgeInsets.zero,
                         children: <Widget>[
-                          getActivity(context: context),
-                          SearchPage(),
-                        ],
+                              DrawerHeader(
+                                decoration: BoxDecoration(color: ZephyrTheme.primaryColor),
+                                child: Text(widget.title, style: TextStyle(color: Colors.white, fontSize: 24)),
+                              ),
+                            ] +
+                            drawerItems,
                       ),
                     ),
-                  ),
-                ),
+                    body: Padding(
+                      padding: EdgeInsets.only(top: 22.0),
+                      child: Center(
+                        child: Stack(
+                          fit: StackFit.loose,
+                          children: <Widget>[
+                            getActivity(context: context),
+                            SearchPage(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               );
             } else {
               // If the favorites are not loaded yet, show a loading screen
