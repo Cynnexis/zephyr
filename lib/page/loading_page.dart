@@ -8,29 +8,6 @@ import '../zephyr_localization.dart';
 /// Widget that display a loading page, containing a [CircularProgressIndicator], a "Loading" text (translated) and a
 /// funny loading message that changes every now and then.
 class LoadingPage extends StatefulWidget {
-  final List<List<String>> messages = <List<String>>[
-    <String>["Loading fingers 🖐..."],
-    <String>["Making it rock 🤘..."],
-    <String>["Hugging contributors 🤗..."],
-    <String>["Connecting to Elix 🤝..."],
-    <String>[
-      "Downloading emojis for facial expressions 🥳",
-      "Error: Only cats emojis were found 😺",
-      "🙀😸😻🐱",
-      "Adding milk in another room 🥛...",
-      "🥛🐈🚪",
-      "Problem solved: Human-emojis retrieved 🤓",
-    ],
-    <String>[
-      "Downloading sign-puns 🙌...",
-      "Lame puns detected... Removing them 👎...",
-    ],
-    <String>["Balancing right-handed and left-handed contributors 👐..."],
-    <String>["Making shadow puppets... Just for fun 🤏"],
-    <String>["Setting accessibility 🧏‍♀️..."],
-    <String>["Setting accessibility 🧏‍♂️..."],
-    <String>["Cutting nails 💅..."],
-  ];
   static const Duration defaultWaitingInterval = Duration(seconds: 4);
 
   final Duration waitingInterval;
@@ -49,6 +26,9 @@ class _LoadingPageState extends State<LoadingPage> {
   /// [nextMessage] from generating more message, turn it to `false`.
   bool keepGeneratingMessage = true;
 
+  /// The list containing all loading messages. It requires a [BuildContext] to be loaded.
+  List<List<String>> messages = null;
+
   @override
   void dispose() {
     keepGeneratingMessage = false;
@@ -57,6 +37,8 @@ class _LoadingPageState extends State<LoadingPage> {
 
   @override
   Widget build(BuildContext context) {
+    messages = ZephyrLocalization.of(context).allLoadingMessages();
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -65,6 +47,7 @@ class _LoadingPageState extends State<LoadingPage> {
           SizedBox(height: 32),
           Text(ZephyrLocalization.of(context).loading(), style: TextStyle(fontSize: 18)),
           SizedBox(height: 32),
+          // TODO: Start displaying loading message after 1 second of loading
           StreamBuilder<String>(
             stream: nextMessage(),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -96,6 +79,8 @@ class _LoadingPageState extends State<LoadingPage> {
   Stream<String> nextMessage({Duration waitingInterval}) async* {
     if (waitingInterval == null) waitingInterval = widget.waitingInterval;
 
+    assert(messages != null, "The list of messages must initialized.");
+
     // History of indices. It is reset when all messages have been sent
     List<int> indicesAlreadyYielded = <int>[];
 
@@ -115,18 +100,19 @@ class _LoadingPageState extends State<LoadingPage> {
         nextMessage = messagesList[++lastMessageIndex];
       } else {
         // If all messages has been done, reset the counter
-        if (indicesAlreadyYielded.length == widget.messages.length) indicesAlreadyYielded.clear();
+        if (indicesAlreadyYielded.length == messages.length) indicesAlreadyYielded.clear();
 
         // Search for a next index
         int nextIndex = -1;
+        // TODO: In theory, this loop could take forever. Optimize it with sets
         do {
-          nextIndex = Random().nextInt(widget.messages.length);
+          nextIndex = Random().nextInt(messages.length);
         } while (indicesAlreadyYielded.contains(nextIndex));
 
         // Add the index to the history list
         indicesAlreadyYielded.add(nextIndex);
 
-        messagesList = widget.messages[nextIndex];
+        messagesList = messages[nextIndex];
         lastMessageIndex = 0;
 
         // Yield the message

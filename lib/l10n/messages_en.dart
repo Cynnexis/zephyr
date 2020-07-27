@@ -26,14 +26,32 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "settingAccessibilityM": MessageLookupByLibrary.simpleMessage("Setting accessibility 🧏‍♂️..."),
         "addToFavorites": MessageLookupByLibrary.simpleMessage("Add to favorites"),
+        "addingMilkAnotherRoom": MessageLookupByLibrary.simpleMessage("Adding milk in another room 🥛..."),
         "appName": MessageLookupByLibrary.simpleMessage("Zéphyr"),
+        "balancingRightHandedLeftHanded":
+            MessageLookupByLibrary.simpleMessage("Balancing right-handed and left-handed contributors 👐..."),
+        "catGoingToRoom": MessageLookupByLibrary.simpleMessage("🥛🐈🚪"),
+        "catsEmojis": MessageLookupByLibrary.simpleMessage("🙀😸😻🐱"),
         "clearTextField": MessageLookupByLibrary.simpleMessage("Clear text field"),
+        "connectingToElix": MessageLookupByLibrary.simpleMessage("Connecting to Elix 🤝..."),
+        "cuttingNails": MessageLookupByLibrary.simpleMessage("Cutting nails 💅..."),
+        "downloadingEmojis": MessageLookupByLibrary.simpleMessage("Downloading emojis for facial expressions 🥳"),
+        "downloadingSignPuns": MessageLookupByLibrary.simpleMessage("Downloading sign-puns 🙌..."),
+        "errorOnlyCatsEmojis": MessageLookupByLibrary.simpleMessage("Error: Only cats emojis were found 😺"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favorite"),
+        "huggingContributors": MessageLookupByLibrary.simpleMessage("Hugging contributors 🤗..."),
+        "lameSignPunsDetected": MessageLookupByLibrary.simpleMessage("Lame puns detected... Removing them 👎..."),
         "loading": m0,
+        "loadingFingers": MessageLookupByLibrary.simpleMessage("Loading fingers 🖐..."),
+        "makingItRock": MessageLookupByLibrary.simpleMessage("Making it rock 🤘..."),
+        "makingShadowPuppets": MessageLookupByLibrary.simpleMessage("Making shadow puppets... Just for fun 🤏"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noSigns": MessageLookupByLibrary.simpleMessage("No signs"),
         "openDrawer": MessageLookupByLibrary.simpleMessage("Open drawer"),
+        "problemSolvedHumanEmojisRetrieved":
+            MessageLookupByLibrary.simpleMessage("Problem solved: Human-emojis retrieved 🤓"),
         "removeFromFavorites": MessageLookupByLibrary.simpleMessage("Remove from favorites"),
         "removeSearchHistory": MessageLookupByLibrary.simpleMessage("Remove search history"),
         "removeSearchHistoryConfirmation":
@@ -42,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "searchButton": MessageLookupByLibrary.simpleMessage("Search button"),
         "searchSign": MessageLookupByLibrary.simpleMessage("Search a sign"),
         "searchSigns": MessageLookupByLibrary.simpleMessage("Search Signs"),
+        "settingAccessibilityF": MessageLookupByLibrary.simpleMessage("Setting accessibility 🧏‍♀️..."),
         "triggerVideoExplanation":
             MessageLookupByLibrary.simpleMessage("Click on the video to play it, and click it again to pause it."),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")
