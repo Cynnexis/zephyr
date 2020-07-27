@@ -31,12 +31,12 @@ class LoadingPage extends StatefulWidget {
     <String>["Setting accessibility 🧏‍♂️..."],
     <String>["Cutting nails 💅..."],
   ];
-  static const Duration defaultWaitingInterval = Duration(seconds: 5);
+  static const Duration defaultWaitingInterval = Duration(seconds: 4);
 
   final Duration waitingInterval;
 
   /// Default constructor for [LoadingPage]. You can customize the interval of time to wait between two messages
-  /// with [waitingInterval] (defaults to 5 seconds).
+  /// with [waitingInterval] (defaults to 4 seconds).
   LoadingPage({Key key, this.waitingInterval = defaultWaitingInterval}) : super(key: key);
 
   @override
