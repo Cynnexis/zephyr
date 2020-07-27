@@ -1,4 +1,4 @@
-DCK_CMP_UP=docker-compose up --remove-orphans
+DCK_CMP_UP=docker-compose up -d --remove-orphans
 
 .PHONY: all test
 
