@@ -5,6 +5,7 @@ import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/page/sign_list_page.dart';
 import 'package:zephyr/service/dico_elix.dart';
+import 'package:zephyr/service/loading_future_builder.dart';
 import 'package:zephyr/zephyr_localization.dart';
 
 class ResultPage extends StatefulWidget {
@@ -28,43 +29,31 @@ class _ResultPageState extends State<ResultPage> {
   Widget build(BuildContext context) {
     // Wait for the signs
     return Consumer<Keywords>(
-      builder: (context, keywords, _) => FutureBuilder(
+      builder: (context, keywords, _) => LoadingFutureBuilder(
         future: keywords.isEmpty ? Future.value(null) : _dicoElix.getSigns(keywords),
+        dataReady: (context, snapshot) => snapshot.connectionState == ConnectionState.done,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            List<Sign> signs = snapshot.data;
+          List<Sign> signs = snapshot.data;
 
-            Widget noResults = Center(
-              child: Text(
-                ZephyrLocalization.of(context).resultsFor(0, keywords.value),
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            );
+          Widget noResults = Center(
+            child: Text(
+              ZephyrLocalization.of(context).resultsFor(0, keywords.value),
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          );
 
-            // If no keywords were given, display the default page or the "No Results" page if the former was not given
-            if (signs == null) {
-              if (widget.defaultPageBuilder != null)
-                return widget.defaultPageBuilder(context);
-              else
-                return noResults;
-            }
-
-            // If no results were returned
-            if (signs.isEmpty) return noResults;
-
-            return SignListPage(signs: signs);
-          } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(key: Key("loading_signs_results")),
-                  SizedBox(height: 32),
-                  Text(ZephyrLocalization.of(context).loading()),
-                ],
-              ),
-            );
+          // If no keywords were given, display the default page or the "No Results" page if the former was not given
+          if (signs == null) {
+            if (widget.defaultPageBuilder != null)
+              return widget.defaultPageBuilder(context);
+            else
+              return noResults;
           }
+
+          // If no results were returned
+          if (signs.isEmpty) return noResults;
+
+          return SignListPage(signs: signs);
         },
       ),
     );

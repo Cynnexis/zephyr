@@ -98,5 +98,107 @@
     "description": "Button saying \"Yes\".",
     "type": "text",
     "placeholders": {}
+  },
+  "loadingFingers": "Cargando los dedos 🖐...",
+  "@loadingFingers": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "makingItRock": "Ajuste del rock 🤘...",
+  "@makingItRock": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "huggingContributors": "Reconocimiento de los contribuyentes 🤗...",
+  "@huggingContributors": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "connectingToElix": "Conexión con Elix 🤝...",
+  "@connectingToElix": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadingEmojis": "Descargando emojis para las expresiones faciales 🥳",
+  "@downloadingEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorOnlyCatsEmojis": "Error: Emojis de gatos encontrados 😺",
+  "@errorOnlyCatsEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "catsEmojis": "🙀😸😻🐱",
+  "@catsEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addingMilkAnotherRoom": "Añadiendo leche en otra habitación 🥛...",
+  "@addingMilkAnotherRoom": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "catGoingToRoom": "🥛🐈🚪",
+  "@catGoingToRoom": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "problemSolvedHumanEmojisRetrieved": "Problema resuelto: Emojis humanoides descargados 🤓",
+  "@problemSolvedHumanEmojisRetrieved": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadingSignPuns": "Descargar juegos de palabras firmadas 🙌...",
+  "@downloadingSignPuns": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lameSignPunsDetected": "Se detectaron malos juegos de palabras... Eliminar 👎...",
+  "@lameSignPunsDetected": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "balancingRightHandedLeftHanded": "Equilibrio entre los contribuyentes diestros y zurdos 👐...",
+  "@balancingRightHandedLeftHanded": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "makingShadowPuppets": "Colocación de sombras chinas ... solo para jugar 🤏",
+  "@makingShadowPuppets": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingAccessibilityF": "Configuración de accesibilidad 🧏‍♀️...",
+  "@settingAccessibilityF": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingAccessibilityM": "Configuración de accesibilidad 🧏‍♂️...",
+  "@settingAccessibilityM": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cuttingNails": "Manicura de uñas 💅...",
+  "@cuttingNails": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
   }
 }

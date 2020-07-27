@@ -26,14 +26,35 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function>{
+        "settingAccessibilityM": MessageLookupByLibrary.simpleMessage("Configuración de accesibilidad 🧏‍♂️..."),
         "addToFavorites": MessageLookupByLibrary.simpleMessage("Agregar a los favoritos"),
+        "addingMilkAnotherRoom": MessageLookupByLibrary.simpleMessage("Añadiendo leche en otra habitación 🥛..."),
         "appName": MessageLookupByLibrary.simpleMessage("Zéphyr"),
+        "balancingRightHandedLeftHanded":
+            MessageLookupByLibrary.simpleMessage("Equilibrio entre los contribuyentes diestros y zurdos 👐..."),
+        "catGoingToRoom": MessageLookupByLibrary.simpleMessage("🥛🐈🚪"),
+        "catsEmojis": MessageLookupByLibrary.simpleMessage("🙀😸😻🐱"),
         "clearTextField": MessageLookupByLibrary.simpleMessage("Borrar texto"),
+        "connectingToElix": MessageLookupByLibrary.simpleMessage("Conexión con Elix 🤝..."),
+        "cuttingNails": MessageLookupByLibrary.simpleMessage("Manicura de uñas 💅..."),
+        "downloadingEmojis":
+            MessageLookupByLibrary.simpleMessage("Descargando emojis para las expresiones faciales 🥳"),
+        "downloadingSignPuns": MessageLookupByLibrary.simpleMessage("Descargar juegos de palabras firmadas 🙌..."),
+        "errorOnlyCatsEmojis": MessageLookupByLibrary.simpleMessage("Error: Emojis de gatos encontrados 😺"),
         "favorite": MessageLookupByLibrary.simpleMessage("Favoritos"),
+        "huggingContributors": MessageLookupByLibrary.simpleMessage("Reconocimiento de los contribuyentes 🤗..."),
+        "lameSignPunsDetected":
+            MessageLookupByLibrary.simpleMessage("Se detectaron malos juegos de palabras... Eliminar 👎..."),
         "loading": m0,
+        "loadingFingers": MessageLookupByLibrary.simpleMessage("Cargando los dedos 🖐..."),
+        "makingItRock": MessageLookupByLibrary.simpleMessage("Ajuste del rock 🤘..."),
+        "makingShadowPuppets":
+            MessageLookupByLibrary.simpleMessage("Colocación de sombras chinas ... solo para jugar 🤏"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "noSigns": MessageLookupByLibrary.simpleMessage("Sin signos"),
         "openDrawer": MessageLookupByLibrary.simpleMessage("Navegación abierta"),
+        "problemSolvedHumanEmojisRetrieved":
+            MessageLookupByLibrary.simpleMessage("Problema resuelto: Emojis humanoides descargados 🤓"),
         "removeFromFavorites": MessageLookupByLibrary.simpleMessage("Quitar de favoritos"),
         "removeSearchHistory": MessageLookupByLibrary.simpleMessage("Eliminar historial de búsqueda"),
         "removeSearchHistoryConfirmation":
@@ -42,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "searchButton": MessageLookupByLibrary.simpleMessage("Botón de búsqueda"),
         "searchSign": MessageLookupByLibrary.simpleMessage("Busca una señal"),
         "searchSigns": MessageLookupByLibrary.simpleMessage("Busque Signos"),
+        "settingAccessibilityF": MessageLookupByLibrary.simpleMessage("Configuración de accesibilidad 🧏‍♀️..."),
         "triggerVideoExplanation": MessageLookupByLibrary.simpleMessage(
             "Haga clic en el video para reproducirlo y haga clic nuevamente para pausarlo."),
         "yes": MessageLookupByLibrary.simpleMessage("Si")

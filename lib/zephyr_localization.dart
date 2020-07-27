@@ -189,6 +189,190 @@ class ZephyrLocalization {
     );
   }
 
+  //region LOADING MESSAGES
+
+  String loadingFingers() {
+    return Intl.message(
+      "Loading fingers 🖐...",
+      name: "loadingFingers",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String makingItRock() {
+    return Intl.message(
+      "Making it rock 🤘...",
+      name: "makingItRock",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String huggingContributors() {
+    return Intl.message(
+      "Hugging contributors 🤗...",
+      name: "huggingContributors",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String connectingToElix() {
+    return Intl.message(
+      "Connecting to Elix 🤝...",
+      name: "connectingToElix",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String downloadingEmojis() {
+    return Intl.message(
+      "Downloading emojis for facial expressions 🥳",
+      name: "downloadingEmojis",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String errorOnlyCatsEmojis() {
+    return Intl.message(
+      "Error: Only cats emojis were found 😺",
+      name: "errorOnlyCatsEmojis",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String catsEmojis() {
+    return Intl.message(
+      "🙀😸😻🐱",
+      name: "catsEmojis",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String addingMilkAnotherRoom() {
+    return Intl.message(
+      "Adding milk in another room 🥛...",
+      name: "addingMilkAnotherRoom",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String catGoingToRoom() {
+    return Intl.message(
+      "🥛🐈🚪",
+      name: "catGoingToRoom",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String problemSolvedHumanEmojisRetrieved() {
+    return Intl.message(
+      "Problem solved: Human-emojis retrieved 🤓",
+      name: "problemSolvedHumanEmojisRetrieved",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  List<String> emojisConversation() => <String>[
+        downloadingEmojis(),
+        errorOnlyCatsEmojis(),
+        catsEmojis(),
+        addingMilkAnotherRoom(),
+        catGoingToRoom(),
+        problemSolvedHumanEmojisRetrieved(),
+      ];
+
+  String downloadingSignPuns() {
+    return Intl.message(
+      "Downloading sign-puns 🙌...",
+      name: "downloadingSignPuns",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String lameSignPunsDetected() {
+    return Intl.message(
+      "Lame puns detected... Removing them 👎...",
+      name: "lameSignPunsDetected",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  List<String> signPunsConversation() => <String>[downloadingSignPuns(), lameSignPunsDetected()];
+
+  String balancingRightHandedLeftHanded() {
+    return Intl.message(
+      "Balancing right-handed and left-handed contributors 👐...",
+      name: "balancingRightHandedLeftHanded",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String makingShadowPuppets() {
+    return Intl.message(
+      "Making shadow puppets... Just for fun 🤏",
+      name: "makingShadowPuppets",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String settingAccessibilityF() {
+    return Intl.message(
+      "Setting accessibility 🧏‍♀️...",
+      name: "settingAccessibilityF",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String settingAccessibilityM() {
+    return Intl.message(
+      "Setting accessibility 🧏‍♂️...",
+      name: "settingAccessibilityM",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  String cuttingNails() {
+    return Intl.message(
+      "Cutting nails 💅...",
+      name: "cuttingNails",
+      desc: "Loading message.",
+      locale: localeName,
+    );
+  }
+
+  List<List<String>> allLoadingMessages() {
+    return <List<String>>[
+      <String>[loadingFingers()],
+      <String>[makingItRock()],
+      <String>[huggingContributors()],
+      <String>[connectingToElix()],
+      emojisConversation(),
+      signPunsConversation(),
+      <String>[balancingRightHandedLeftHanded()],
+      <String>[makingShadowPuppets()],
+      <String>[settingAccessibilityF()],
+      <String>[settingAccessibilityM()],
+      <String>[cuttingNails()],
+    ];
+  }
+
+  //endregion
+
   //#endregion
 }
 

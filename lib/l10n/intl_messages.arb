@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-07-26T18:11:22.704329",
+  "@@last_modified": "2020-07-27T15:29:32.422672",
   "appName": "Zéphyr",
   "@appName": {
     "description": "The application name.",
@@ -110,6 +110,108 @@
   "yes": "Yes",
   "@yes": {
     "description": "Button saying \"Yes\".",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loadingFingers": "Loading fingers 🖐...",
+  "@loadingFingers": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "makingItRock": "Making it rock 🤘...",
+  "@makingItRock": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "huggingContributors": "Hugging contributors 🤗...",
+  "@huggingContributors": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "connectingToElix": "Connecting to Elix 🤝...",
+  "@connectingToElix": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadingEmojis": "Downloading emojis for facial expressions 🥳",
+  "@downloadingEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "errorOnlyCatsEmojis": "Error: Only cats emojis were found 😺",
+  "@errorOnlyCatsEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "catsEmojis": "🙀😸😻🐱",
+  "@catsEmojis": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addingMilkAnotherRoom": "Adding milk in another room 🥛...",
+  "@addingMilkAnotherRoom": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "catGoingToRoom": "🥛🐈🚪",
+  "@catGoingToRoom": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "problemSolvedHumanEmojisRetrieved": "Problem solved: Human-emojis retrieved 🤓",
+  "@problemSolvedHumanEmojisRetrieved": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "downloadingSignPuns": "Downloading sign-puns 🙌...",
+  "@downloadingSignPuns": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lameSignPunsDetected": "Lame puns detected... Removing them 👎...",
+  "@lameSignPunsDetected": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "balancingRightHandedLeftHanded": "Balancing right-handed and left-handed contributors 👐...",
+  "@balancingRightHandedLeftHanded": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "makingShadowPuppets": "Making shadow puppets... Just for fun 🤏",
+  "@makingShadowPuppets": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingAccessibilityF": "Setting accessibility 🧏‍♀️...",
+  "@settingAccessibilityF": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingAccessibilityM": "Setting accessibility 🧏‍♂️...",
+  "@settingAccessibilityM": {
+    "description": "Loading message.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cuttingNails": "Cutting nails 💅...",
+  "@cuttingNails": {
+    "description": "Loading message.",
     "type": "text",
     "placeholders": {}
   }
