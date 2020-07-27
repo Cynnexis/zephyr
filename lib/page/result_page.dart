@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zephyr/model/keywords.dart';
 import 'package:zephyr/model/sign.dart';
+import 'package:zephyr/page/loading_page.dart';
 import 'package:zephyr/page/sign_list_page.dart';
 import 'package:zephyr/service/dico_elix.dart';
 import 'package:zephyr/zephyr_localization.dart';
@@ -54,16 +55,7 @@ class _ResultPageState extends State<ResultPage> {
 
             return SignListPage(signs: signs);
           } else {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  CircularProgressIndicator(key: Key("loading_signs_results")),
-                  SizedBox(height: 32),
-                  Text(ZephyrLocalization.of(context).loading()),
-                ],
-              ),
-            );
+            return LoadingPage();
           }
         },
       ),
