@@ -38,6 +38,8 @@ dependencies:
   json_annotation: 3.0.1
   path_provider: 1.6.11
   provider: 4.3.1
+  flutter_typeahead: 1.8.6
+  json_serializable: 3.3.0
 
 dev_dependencies:
   flutter_driver:
@@ -52,8 +54,6 @@ dev_dependencies:
   flutter_launcher_icons: 0.7.5
 
   build_runner: 1.10.0
-  json_serializable: 3.3.0
-  flutter_typeahead: 1.8.6
 
 
 # For information on the generic Dart part of this file, see the

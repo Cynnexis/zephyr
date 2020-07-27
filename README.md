@@ -41,6 +41,9 @@ The app should be running now.
 * [Dart][dart]
 * [Flutter][flutter]
 * [Android Studio][android-studio]
+* [flutter_typeahead][flutter_typeahead]
+* [diacritic][diacritic]
+* [flutter_launcher_icons][flutter_launcher_icons]
 
 ## Contributing
 
@@ -56,11 +59,14 @@ develop mobile app using Flutter SDK and the Dart language.
 This project is under the GNU General Public License. Please see the [LICENSE.txt][license] file
 for more detail (it's a really fascinating story written in there!)
 
-[zéphyr-demo]: https://i.imgur.com/mvmbIwa.gif
+[zéphyr-demo]: https://i.imgur.com/Ga1C2xa.gif
 [flutter-install]: https://flutter.dev/docs/get-started/install
 [zephyr-zip]: https://github.com/Cynnexis/zephyr/archive/master.zip
 [flutter]: https://flutter.dev/
 [dart]: https://dart.dev/
 [android-studio]: https://developer.android.com/studio
+[flutter_typeahead]: https://pub.dev/packages/flutter_typeahead
+[diacritic]: https://pub.dev/packages/diacritic
+[flutter_launcher_icons]: https://pub.dev/packages/flutter_launcher_icons
 [cynnexis]: https://github.com/Cynnexis
 [license]: https://github.com/Cynnexis/zephyr/blob/master/LICENSE.txt
