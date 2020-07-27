@@ -47,20 +47,27 @@ class _LoadingPageState extends State<LoadingPage> {
           SizedBox(height: 32),
           Text(ZephyrLocalization.of(context).loading(), style: TextStyle(fontSize: 18)),
           SizedBox(height: 32),
-          // TODO: Start displaying loading message after 1 second of loading
-          StreamBuilder<String>(
-            stream: nextMessage(),
-            builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-              String message = snapshot.data != null && snapshot.data.length > 0 ? snapshot.data : '';
-              return AnimatedSwitcher(
-                key: Key("loading_animated_switcher"),
-                duration: Duration(milliseconds: 200),
-                child: Text(
-                  message,
-                  key: Key("loading_message_${message.hashCode}"),
-                  style: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
-                ),
-              );
+          FutureBuilder<void>(
+            future: Future.delayed(Duration(milliseconds: 1500)),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return StreamBuilder<String>(
+                  stream: nextMessage(),
+                  builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                    String message = snapshot.data != null && snapshot.data.length > 0 ? snapshot.data : '';
+                    return AnimatedSwitcher(
+                      key: Key("loading_animated_switcher"),
+                      duration: Duration(milliseconds: 200),
+                      child: Text(
+                        message,
+                        key: Key("loading_message_${message.hashCode}"),
+                        style: TextStyle(color: Color.fromARGB(200, 255, 255, 255)),
+                      ),
+                    );
+                  },
+                );
+              } else
+                return Text('');
             },
           ),
         ],
@@ -81,8 +88,8 @@ class _LoadingPageState extends State<LoadingPage> {
 
     assert(messages != null, "The list of messages must initialized.");
 
-    // History of indices. It is reset when all messages have been sent
-    List<int> indicesAlreadyYielded = <int>[];
+    // Messages that have not been used yet
+    List<List<String>> availableMessages = messages.toList();
 
     // The current message and its follow-up (if any) being processed by the loop
     List<String> messagesList = null;
@@ -100,20 +107,16 @@ class _LoadingPageState extends State<LoadingPage> {
         nextMessage = messagesList[++lastMessageIndex];
       } else {
         // If all messages has been done, reset the counter
-        if (indicesAlreadyYielded.length == messages.length) indicesAlreadyYielded.clear();
+        if (availableMessages.isEmpty) availableMessages.addAll(messages);
 
         // Search for a next index
-        int nextIndex = -1;
-        // TODO: In theory, this loop could take forever. Optimize it with sets
-        do {
-          nextIndex = Random().nextInt(messages.length);
-        } while (indicesAlreadyYielded.contains(nextIndex));
+        int nextIndex = Random().nextInt(availableMessages.length);
 
-        // Add the index to the history list
-        indicesAlreadyYielded.add(nextIndex);
-
-        messagesList = messages[nextIndex];
+        messagesList = availableMessages[nextIndex];
         lastMessageIndex = 0;
+
+        // Remove the selected message from the list of available messages
+        availableMessages.remove(messagesList);
 
         // Yield the message
         nextMessage = messagesList[lastMessageIndex];
