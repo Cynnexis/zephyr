@@ -6,7 +6,7 @@ function print_help() {
 	echo "The commands are:"
 	echo "  lint     - Check if the Dart syntax of the code is correct."
 	echo "  fix-lint - Fix the Dart syntax of the code."
-	echo "  test     - Run the test."
+	echo "  test     - Run the tests."
 }
 
 if [[ $# == 0 ]]; then

@@ -26,3 +26,21 @@ jobs:
         id: zephyr_test
         with:
           args: "test"
+
+  release:
+    runs-on: ubuntu-18.04
+    name: Create a release
+    needs: [lint, test]
+    if: github.event_name == 'push' && github.ref == 'master' || contains(github.ref, 'cicd/')
+    steps:
+      - name: Create a release for Zéphyr
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: ${{ github.sha }}
+          body: "Ref: ${{ github.ref }} SHA: ${{ github.sha }}"
+          draft: true
+          prerelease: false
