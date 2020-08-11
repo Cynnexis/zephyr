@@ -1,21 +1,21 @@
 import 'package:flutter/widgets.dart';
-import 'package:zephyr/model/abstract_notifier_set.dart';
+import 'package:notifiable_iterables/notifiable_iterables.dart';
 import 'package:zephyr/model/sign.dart';
 import 'package:zephyr/service/preferences.dart';
 
 /// List of favorites signs. It is also a [ChangeNotifier] that notifies all its listeners every time the list is
 /// modified.
-class Favorites extends AbstractNotifierSet<Sign> {
+class Favorites extends NotifiableSet<Sign> {
   /// Default constructors for [Favorites].
   ///
   /// Construct a list of favorites signs from [signs]. The listeners will be notify at the end.
   Favorites([dynamic signs]) {
-    if (signs != null) this.values = signs;
+    if (signs != null) addAll(signs);
   }
 
   /// Construct a copy of [favorites].
   Favorites.from(Favorites favorites) {
-    this.values = favorites.values;
+    addAll(favorites);
   }
 
   /// Create a [Favorites] instance by loading the value from the internal storage. Note that this operations is
@@ -27,7 +27,8 @@ class Favorites extends AbstractNotifierSet<Sign> {
   /// instead). Finally, [onComplete] will be called at the end of the operation.
   Favorites.load([void Function(Favorites) onSuccess, void Function(Error) onError, void Function() onComplete]) {
     loadFavorites().then((fav) {
-      this.values = fav.values;
+      clear();
+      addAll(fav);
       if (onSuccess != null) onSuccess(this);
     }).catchError((e) {
       if (onError != null)

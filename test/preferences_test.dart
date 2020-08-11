@@ -60,13 +60,13 @@ void main() {
     test("Saving & Loading Favorites", () async {
       await saveFavorites(signs);
       final Favorites loadedSigns = await loadFavorites();
-      expect(signs, equals(loadedSigns.values));
+      expect(signs, equals(loadedSigns.toSet()));
     });
 
     test("Saving & Loading History", () async {
       await saveHistory(keywordsSet);
       final History loadedHistory = await loadHistory();
-      expect(keywordsSet, equals(loadedHistory.values));
+      expect(keywordsSet, equals(loadedHistory.toSet()));
     });
 
     test("Append Favorites", () async {
@@ -88,7 +88,7 @@ void main() {
 
       await saveFavorites(newSigns, append: true);
 
-      final Set<Sign> loadedSigns = Set<Sign>.of((await loadFavorites()).values);
+      final Set<Sign> loadedSigns = (await loadFavorites()).toSet();
       expect(allSigns, equals(loadedSigns));
     });
 
@@ -114,7 +114,7 @@ void main() {
 
       await saveFavorites(newSigns, append: true);
 
-      final Set<Sign> loadedSigns = Set<Sign>.of((await loadFavorites()).values);
+      final Set<Sign> loadedSigns = (await loadFavorites()).toSet();
       expect(allSigns, equals(loadedSigns));
     });
   });
