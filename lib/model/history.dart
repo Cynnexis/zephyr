@@ -1,22 +1,22 @@
 import 'package:flutter/widgets.dart';
-import 'package:zephyr/model/abstract_notifier_set.dart';
+import 'package:notifiable_iterables/notifiable_iterables.dart';
 import 'package:zephyr/service/preferences.dart';
 
 import 'keywords.dart';
 
 /// List of keywords. It is also a [ChangeNotifier] that notifies all its listeners every time the list is
 /// modified.
-class History extends AbstractNotifierSet<Keywords> {
+class History extends NotifiableSet<Keywords> {
   /// Default constructors for [History].
   ///
   /// Construct a list of keywords from [keywords]. The listeners will be notify at the end.
   History([dynamic keywords]) {
-    if (keywords != null) this.values = keywords;
+    if (keywords != null) addAll(keywords);
   }
 
   /// Construct a copy of [History].
   History.from(History history) {
-    this.values = history.values;
+    addAll(history);
   }
 
   /// Create a [History] instance by loading the value from the internal storage. Note that this operations is
@@ -28,7 +28,8 @@ class History extends AbstractNotifierSet<Keywords> {
   /// instead). Finally, [onComplete] will be called at the end of the operation.
   History.load([void Function(History) onSuccess, void Function(Error) onError, void Function() onComplete]) {
     loadHistory().then((history) {
-      this.values = history.values;
+      clear();
+      addAll(history);
       if (onSuccess != null) onSuccess(this);
     }).catchError((e) {
       if (onError != null)

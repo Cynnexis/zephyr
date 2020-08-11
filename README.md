@@ -44,6 +44,7 @@ The app should be running now.
 * [flutter_typeahead][flutter_typeahead]
 * [diacritic][diacritic]
 * [flutter_launcher_icons][flutter_launcher_icons]
+* [notifiable_iterables][notifiable_iterables]
 
 ## Contributing
 
@@ -68,5 +69,6 @@ for more detail (it's a really fascinating story written in there!)
 [flutter_typeahead]: https://pub.dev/packages/flutter_typeahead
 [diacritic]: https://pub.dev/packages/diacritic
 [flutter_launcher_icons]: https://pub.dev/packages/flutter_launcher_icons
+[notifiable_iterables]: https://pub.dev/packages/notifiable_iterables
 [cynnexis]: https://github.com/Cynnexis
 [license]: https://github.com/Cynnexis/zephyr/blob/master/LICENSE.txt
