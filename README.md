@@ -18,8 +18,10 @@ The following instructions will get you a copy of the source code, and help you 
 
 ### Requirements
 
-This project requires [Flutter][flutter-install], SDK version: minimum
+This project requires [Flutter][flutter-install], Dart SDK version: minimum
 2.3.0.
+
+> For compatibility, please use Flutter [1.20.1](https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_1.20.1-stable.zip) (commit [2ae3451](https://github.com/flutter/flutter/commit/2ae34518b87dd891355ed6c6ea8cb68c4d52bb9d)) with its Dart SDK 2.9.0.
 
 ### Installation
 
